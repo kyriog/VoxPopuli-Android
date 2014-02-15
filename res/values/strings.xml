@@ -2,8 +2,9 @@
 <resources>
 
     <string name="app_name">Vox Populi</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_login">Login using Twitter</string>
+    
+    <string name="home_username">You are %1$s</string>
+    <string name="home_join">Join game</string>
 
 </resources>

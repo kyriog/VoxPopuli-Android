@@ -1,6 +1,7 @@
 package fr.kyriog.android.voxpopuli;
 
 import android.os.Bundle;
+import android.widget.TextView;
 import android.app.Activity;
 import android.content.Intent;
 
@@ -17,13 +18,14 @@ public class GameActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivityForResult(intent, LOGIN_REQUEST_CODE);
-		//setContentView(R.layout.activity_game);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == Activity.RESULT_OK) {
-
+			setContentView(R.layout.activity_game);
+			TextView username = (TextView) findViewById(R.id.home_username);
+			username.setText(getResources().getString(R.string.home_username, data.getStringExtra(VP_DATA_USERNAME)));
 		} else
 			finish();
 	}

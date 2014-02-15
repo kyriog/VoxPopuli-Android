@@ -9,8 +9,19 @@
     tools:context=".GameActivity" >
 
     <TextView
+        android:id="@+id/home_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentRight="true"
+        android:text="@string/home_username" />
+
+    <Button
+        android:id="@+id/home_join"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/home_username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/home_join" />
 
 </RelativeLayout>
