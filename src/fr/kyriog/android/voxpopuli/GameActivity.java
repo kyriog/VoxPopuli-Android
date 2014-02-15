@@ -9,7 +9,7 @@ public class GameActivity extends Activity {
 	public final static String VP_DATA_GAME = "game";
 	public final static String VP_DATA_USER_ID = "userId";
 	public final static String VP_DATA_USER_SESSION = "userSession";
-	
+
 	private final static int LOGIN_REQUEST_CODE = 1;
 
 	@Override
@@ -23,7 +23,7 @@ public class GameActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == Activity.RESULT_OK) {
-			
+
 		} else
 			finish();
 	}

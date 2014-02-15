@@ -16,7 +16,7 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
+
 		WebView web = (WebView) findViewById(R.id.login_webview);
 		WebSettings settings = web.getSettings();
 		settings.setJavaScriptEnabled(true);
@@ -24,7 +24,7 @@ public class LoginActivity extends Activity {
 		web.setWebViewClient(new Client());
 		web.loadUrl("http://vox-populi.richie.fr/login");
 	}
-	
+
 	private class Client extends WebViewClient {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -38,7 +38,7 @@ public class LoginActivity extends Activity {
 				view.loadUrl("javascript:window.androidjs.getHtml(document.getElementsByTagName('html')[0].innerHTML);");
 		}
 	}
-	
+
 	private class JS {
 		@JavascriptInterface
 		public void getHtml(String rawHtml) {
@@ -47,13 +47,13 @@ public class LoginActivity extends Activity {
 			String game = html[5].split("/game/", 2)[1].split("\"", 2)[0];
 			String userId = html[12].split("user_id=", 2)[1].split("&", 2)[0];
 			String userSession = html[12].split("user_session=", 2)[1].split("&", 2)[0];
-			
+
 			Intent data = new Intent();
 			data.putExtra(GameActivity.VP_DATA_USERNAME, username);
 			data.putExtra(GameActivity.VP_DATA_GAME, game);
 			data.putExtra(GameActivity.VP_DATA_USER_ID, userId);
 			data.putExtra(GameActivity.VP_DATA_USER_SESSION, userSession);
-			
+
 			setResult(Activity.RESULT_OK, data);
 			finish();
 		}
