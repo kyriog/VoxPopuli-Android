@@ -49,10 +49,10 @@ public class LoginActivity extends Activity {
 			String userSession = html[12].split("user_session=", 2)[1].split("&", 2)[0];
 
 			Intent data = new Intent();
-			data.putExtra(GameActivity.VP_DATA_USERNAME, username);
-			data.putExtra(GameActivity.VP_DATA_GAME, game);
-			data.putExtra(GameActivity.VP_DATA_USER_ID, userId);
-			data.putExtra(GameActivity.VP_DATA_USER_SESSION, userSession);
+			data.putExtra(HomeActivity.VP_DATA_USERNAME, username);
+			data.putExtra(HomeActivity.VP_DATA_GAME, game);
+			data.putExtra(HomeActivity.VP_DATA_USER_ID, userId);
+			data.putExtra(HomeActivity.VP_DATA_USER_SESSION, userSession);
 
 			setResult(Activity.RESULT_OK, data);
 			finish();

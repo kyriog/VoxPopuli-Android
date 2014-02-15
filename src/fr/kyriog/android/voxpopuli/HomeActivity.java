@@ -5,7 +5,7 @@ import android.widget.TextView;
 import android.app.Activity;
 import android.content.Intent;
 
-public class GameActivity extends Activity {
+public class HomeActivity extends Activity {
 	public final static String VP_DATA_USERNAME = "username";
 	public final static String VP_DATA_GAME = "game";
 	public final static String VP_DATA_USER_ID = "userId";
@@ -23,7 +23,7 @@ public class GameActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == Activity.RESULT_OK) {
-			setContentView(R.layout.activity_game);
+			setContentView(R.layout.activity_home);
 			TextView username = (TextView) findViewById(R.id.home_username);
 			username.setText(getResources().getString(R.string.home_username, data.getStringExtra(VP_DATA_USERNAME)));
 		} else
