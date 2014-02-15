@@ -3,8 +3,14 @@
 
     <string name="app_name">Vox Populi</string>
     <string name="title_activity_login">Login using Twitter</string>
+    <string name="title_activity_game">Game: %1$s</string>
+    
+    <string name="connecting">Connecting to server…</string>
     
     <string name="home_username">You are %1$s</string>
     <string name="home_join">Join game</string>
+    
+	<string name="game_waiting">Waiting</string>
+	<string name="game_waiting_time">%1$ds</string>
 
 </resources>

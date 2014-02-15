@@ -7,7 +7,8 @@
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="19" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -26,6 +27,10 @@
         <activity
             android:name="fr.kyriog.android.voxpopuli.LoginActivity"
             android:label="@string/title_activity_login" />
+        <activity
+            android:name="fr.kyriog.android.voxpopuli.GameActivity"
+            android:label="@string/title_activity_game" >
+        </activity>
     </application>
 
 </manifest>
