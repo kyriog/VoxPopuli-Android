@@ -8,6 +8,7 @@ import android.webkit.WebViewClient;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 
 public class LoginActivity extends Activity {
 	@SuppressLint("SetJavaScriptEnabled")
@@ -25,6 +26,12 @@ public class LoginActivity extends Activity {
 	}
 	
 	private class Client extends WebViewClient {
+		@Override
+		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			if("http://vox-populi.richie.fr/".equals(url))
+				setContentView(R.layout.loading);
+		}
+
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			if("http://vox-populi.richie.fr/".equals(url))
