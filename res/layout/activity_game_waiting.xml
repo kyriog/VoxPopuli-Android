@@ -39,10 +39,10 @@
     <GridView
         android:id="@+id/game_waiting_players"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignLeft="@+id/game_waiting_progress"
         android:layout_below="@id/game_waiting_time"
-        android:numColumns="3" >
+        android:numColumns="2" >
     </GridView>
 
 </RelativeLayout>
