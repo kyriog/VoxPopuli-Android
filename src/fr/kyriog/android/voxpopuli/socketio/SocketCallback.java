@@ -52,6 +52,10 @@ public class SocketCallback implements IOCallback {
 					Player player = createPlayerFromJSONObject(jsonPlayer);
 					msg.obj = player;
 					handler.sendMessage(msg);
+				} else if("removePlayer".equals(action)) {
+					msg.arg1 = GameHandler.ACTION_REMOVEPLAYER;
+					msg.arg2 = rootData.getInt("player"); // Player ID
+					handler.sendMessage(msg);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();

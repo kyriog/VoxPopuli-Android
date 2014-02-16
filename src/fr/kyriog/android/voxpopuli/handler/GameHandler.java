@@ -13,6 +13,7 @@ import android.widget.GridView;
 public class GameHandler extends Handler {
 	public final static int ACTION_ROOMDATA = 1000;
 	public final static int ACTION_ADDPLAYER = 1001;
+	public final static int ACTION_REMOVEPLAYER = 1002;
 
 	public final static int STATUS_WAITING = 2000;
 
@@ -45,6 +46,10 @@ public class GameHandler extends Handler {
 		case ACTION_ADDPLAYER:
 			Player player = (Player) msg.obj;
 			adapter.add(player);
+			break;
+		case ACTION_REMOVEPLAYER:
+			adapter.remove(msg.arg2);
+			break;
 		}
 	}
 
