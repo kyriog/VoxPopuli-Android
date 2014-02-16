@@ -105,6 +105,26 @@ public class SocketCallback implements IOCallback {
 					}
 					msg.obj = question;
 					handler.sendMessage(msg);
+				} else if("showVotes".equals(action)) {
+					msg.arg1 = GameHandler.ACTION_SHOWVOTES;
+					Bundle data = new Bundle();
+					JSONArray votes = rootData.getJSONArray("votes");
+					for(int i = 0; i < 3; i++) {
+						int vote = votes.getInt(i);
+						switch(i) {
+						case 0:
+							data.putInt(GameHandler.BUNDLE_ANSWER_A, vote);
+							break;
+						case 1:
+							data.putInt(GameHandler.BUNDLE_ANSWER_B, vote);
+							break;
+						case 2:
+							data.putInt(GameHandler.BUNDLE_ANSWER_C, vote);
+							break;
+						}
+					}
+					msg.obj = data;
+					handler.sendMessage(msg);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();

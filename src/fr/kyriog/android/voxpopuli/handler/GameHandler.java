@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import fr.kyriog.android.voxpopuli.R;
 import fr.kyriog.android.voxpopuli.adapter.PlayerAdapter;
 import fr.kyriog.android.voxpopuli.entity.Player;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +29,7 @@ public class GameHandler extends Handler {
 	public final static int ACTION_UPDATETIMER = 1003;
 	public final static int ACTION_GAINLIFE = 1004;
 	public final static int ACTION_NEWQUESTION = 1005;
+	public final static int ACTION_SHOWVOTES = 1006;
 
 	public final static int STATUS_WAITING = 2000;
 
@@ -56,6 +58,7 @@ public class GameHandler extends Handler {
 		this.socket = socket;
 	}
 
+	@SuppressLint("CutPasteId")
 	@Override
 	public void handleMessage(Message msg) {
 		switch(msg.arg1) {
@@ -122,25 +125,49 @@ public class GameHandler extends Handler {
 			lifecount.setText(String.valueOf(msg.arg2));
 			break;
 		case ACTION_NEWQUESTION:
-			Bundle data = (Bundle) msg.obj;
+			Bundle questionData = (Bundle) msg.obj;
 
 			TextView question = (TextView) activity.findViewById(R.id.game_voting_question);
-			question.setText(data.getString(BUNDLE_QUESTION));
+			question.setText(questionData.getString(BUNDLE_QUESTION));
 
 			Button answerA = (Button) activity.findViewById(R.id.game_voting_answer_a);
-			answerA.setText(data.getString(BUNDLE_ANSWER_A));
+			answerA.setText(questionData.getString(BUNDLE_ANSWER_A));
 			answerA.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_A));
 			answerA.setEnabled(true);
 
 			Button answerB = (Button) activity.findViewById(R.id.game_voting_answer_b);
-			answerB.setText(data.getString(BUNDLE_ANSWER_B));
+			answerB.setText(questionData.getString(BUNDLE_ANSWER_B));
 			answerB.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_B));
 			answerB.setEnabled(true);
 
 			Button answerC = (Button) activity.findViewById(R.id.game_voting_answer_c);
-			answerC.setText(data.getString(BUNDLE_ANSWER_C));
+			answerC.setText(questionData.getString(BUNDLE_ANSWER_C));
 			answerC.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_C));
 			answerC.setEnabled(true);
+
+			TextView votesInvisibleA = (TextView) activity.findViewById(R.id.game_voting_vote_a);
+			votesInvisibleA.setVisibility(View.GONE);
+
+			TextView votesInvisibleB = (TextView) activity.findViewById(R.id.game_voting_vote_b);
+			votesInvisibleB.setVisibility(View.GONE);
+
+			TextView votesInvisibleC = (TextView) activity.findViewById(R.id.game_voting_vote_c);
+			votesInvisibleC.setVisibility(View.GONE);
+			break;
+		case ACTION_SHOWVOTES:
+			Bundle votesData = (Bundle) msg.obj;
+
+			TextView votesA = (TextView) activity.findViewById(R.id.game_voting_vote_a);
+			votesA.setText(String.valueOf(votesData.getInt(BUNDLE_ANSWER_A)));
+			votesA.setVisibility(View.VISIBLE);
+
+			TextView votesB = (TextView) activity.findViewById(R.id.game_voting_vote_b);
+			votesB.setText(String.valueOf(votesData.getInt(BUNDLE_ANSWER_B)));
+			votesB.setVisibility(View.VISIBLE);
+
+			TextView votesC = (TextView) activity.findViewById(R.id.game_voting_vote_c);
+			votesC.setText(String.valueOf(votesData.getInt(BUNDLE_ANSWER_C)));
+			votesC.setVisibility(View.VISIBLE);
 			break;
 		}
 	}
