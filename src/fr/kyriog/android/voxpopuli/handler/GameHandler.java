@@ -1,6 +1,11 @@
 package fr.kyriog.android.voxpopuli.handler;
 
+import io.socket.SocketIO;
+
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import fr.kyriog.android.voxpopuli.R;
 import fr.kyriog.android.voxpopuli.adapter.PlayerAdapter;
@@ -10,6 +15,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -34,6 +41,7 @@ public class GameHandler extends Handler {
 	public final static String BUNDLE_ANSWER_C = "answerC";
 
 	private final Activity activity;
+	private final SocketIO socket;
 	private PlayerAdapter adapter;
 
 	private int currentPlayerCount = 0;
@@ -43,8 +51,9 @@ public class GameHandler extends Handler {
 	private boolean progressLaunched = false;
 	private boolean gameStarted = false;
 
-	public GameHandler(Activity activity) {
+	public GameHandler(Activity activity, SocketIO socket) {
 		this.activity = activity;
+		this.socket = socket;
 	}
 
 	@Override
@@ -118,14 +127,17 @@ public class GameHandler extends Handler {
 			TextView question = (TextView) activity.findViewById(R.id.game_voting_question);
 			question.setText(data.getString(BUNDLE_QUESTION));
 
-			TextView answerA = (TextView) activity.findViewById(R.id.game_voting_answer_a);
+			Button answerA = (Button) activity.findViewById(R.id.game_voting_answer_a);
 			answerA.setText(data.getString(BUNDLE_ANSWER_A));
+			answerA.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_A));
 
-			TextView answerB = (TextView) activity.findViewById(R.id.game_voting_answer_b);
+			Button answerB = (Button) activity.findViewById(R.id.game_voting_answer_b);
 			answerB.setText(data.getString(BUNDLE_ANSWER_B));
+			answerB.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_B));
 
-			TextView answerC = (TextView) activity.findViewById(R.id.game_voting_answer_c);
+			Button answerC = (Button) activity.findViewById(R.id.game_voting_answer_c);
 			answerC.setText(data.getString(BUNDLE_ANSWER_C));
+			answerC.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_C));
 			break;
 		}
 	}
@@ -137,5 +149,35 @@ public class GameHandler extends Handler {
 				startPlayerCount,
 				maxPlayerCount);
 		counter.setText(counterText);
+	}
+
+	private class OnAnswerListener implements OnClickListener {
+		public final static int ANSWER_A = 0;
+		public final static int ANSWER_B = 1;
+		public final static int ANSWER_C = 2;
+
+		private final int answer;
+
+		public OnAnswerListener(int answer) {
+			this.answer = answer;
+		}
+
+		@Override
+		public void onClick(View v) {
+			try {
+				JSONObject data = new JSONObject();
+				data.put("action", "vote");
+				data.put("voteid", answer);
+				socket.emit("clientEvent", data);
+				Button answerA = (Button) activity.findViewById(R.id.game_voting_answer_a);
+				answerA.setEnabled(false);
+				Button answerB = (Button) activity.findViewById(R.id.game_voting_answer_b);
+				answerB.setEnabled(false);
+				Button answerC = (Button) activity.findViewById(R.id.game_voting_answer_c);
+				answerC.setEnabled(false);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

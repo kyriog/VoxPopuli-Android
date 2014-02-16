@@ -29,7 +29,7 @@ public class GameActivity extends Activity {
 			header.append("&page=game");
 			header.append("&room=" + extras.getString(HomeActivity.VP_DATA_GAME));
 			socket = new SocketIO("http://ks.richie.fr:443/lldpgn", header.toString());
-			GameHandler handler = new GameHandler(this);
+			GameHandler handler = new GameHandler(this, socket);
 			socket.connect(new SocketCallback(handler));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
