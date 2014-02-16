@@ -33,16 +33,25 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/game_waiting_progress"
-        android:text="@string/game_waiting_time"
         android:visibility="invisible" />
 
     <GridView
         android:id="@+id/game_waiting_players"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/game_waiting_counter"
         android:layout_alignLeft="@+id/game_waiting_progress"
         android:layout_below="@id/game_waiting_time"
         android:numColumns="2" >
+
     </GridView>
+
+    <TextView
+        android:id="@+id/game_waiting_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

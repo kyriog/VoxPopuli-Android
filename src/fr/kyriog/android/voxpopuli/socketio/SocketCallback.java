@@ -1,12 +1,11 @@
 package fr.kyriog.android.voxpopuli.socketio;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import fr.kyriog.android.voxpopuli.entity.Player;
@@ -34,7 +33,7 @@ public class SocketCallback implements IOCallback {
 					JSONObject data = rootData.getJSONObject("roomData");
 					if("waiting".equals(data.getString("status"))) {
 						msg.arg2 = GameHandler.STATUS_WAITING;
-						List<Player> players = new ArrayList<Player>();
+						ArrayList<Player> players = new ArrayList<Player>();
 						JSONObject jsonPlayers = data.getJSONObject("players");
 						JSONArray jsonId = jsonPlayers.names();
 						for(int i = 0; i < jsonPlayers.length(); i++) {
@@ -43,7 +42,12 @@ public class SocketCallback implements IOCallback {
 							Player player = createPlayerFromJSONObject(jsonPlayer);
 							players.add(player);
 						}
-						msg.obj = players;
+						Bundle extras = new Bundle();
+						extras.putParcelableArrayList(GameHandler.BUNDLE_PLAYERS, players);
+						extras.putInt(GameHandler.BUNDLE_CURRENT_PLAYER_COUNT, data.getInt("nbPlayers"));
+						extras.putInt(GameHandler.BUNDLE_START_PLAYER_COUNT, data.getInt("minPlayers"));
+						extras.putInt(GameHandler.BUNDLE_MAX_PLAYER_COUNT, data.getInt("maxPlayers"));
+						msg.obj = extras;
 						handler.sendMessage(msg);
 					}
 				} else if("addPlayer".equals(action)) {
