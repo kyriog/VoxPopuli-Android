@@ -159,6 +159,13 @@ public class GameHandler extends Handler {
 		case ACTION_SHOWVOTES:
 			Bundle votesData = (Bundle) msg.obj;
 
+			Button answerDisableA = (Button) activity.findViewById(R.id.game_voting_answer_a);
+			answerDisableA.setEnabled(false);
+			Button answerDisableB = (Button) activity.findViewById(R.id.game_voting_answer_b);
+			answerDisableB.setEnabled(false);
+			Button answerDisableC = (Button) activity.findViewById(R.id.game_voting_answer_c);
+			answerDisableC.setEnabled(false);
+
 			TextView votesA = (TextView) activity.findViewById(R.id.game_voting_vote_a);
 			votesA.setText(String.valueOf(votesData.getInt(BUNDLE_ANSWER_A)));
 			votesA.setVisibility(View.VISIBLE);
