@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import fr.kyriog.android.voxpopuli.entity.Player;
 import fr.kyriog.android.voxpopuli.handler.GameHandler;
 import io.socket.IOAcknowledge;
@@ -16,6 +17,7 @@ import io.socket.SocketIOException;
 
 public class SocketCallback implements IOCallback {
 	private final Handler handler;
+	private int timer = -1;
 
 	public SocketCallback(Handler handler) {
 		this.handler = handler;
@@ -60,10 +62,20 @@ public class SocketCallback implements IOCallback {
 					msg.arg1 = GameHandler.ACTION_REMOVEPLAYER;
 					msg.arg2 = rootData.getInt("player"); // Player ID
 					handler.sendMessage(msg);
+				} else if("updateTimer".equals(action)) {
+					int newTimer = (int) Math.floor(rootData.getInt("newValue")/1000);
+					if(timer != newTimer) {
+						if(timer == -1)
+							new Timer().start();
+						Log.w("timer", "Timer not synchronized!");
+						timer = newTimer;
+						sendTimerUpdate();
+					}
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+
 		}
 	}
 
@@ -72,6 +84,28 @@ public class SocketCallback implements IOCallback {
 		player.setUsername(jsonPlayer.getString("screen_name"));
 		player.setAvatarUrl(jsonPlayer.getString("avatar_url"));
 		return player;
+	}
+
+	private void sendTimerUpdate() {
+		Message msg = new Message();
+		msg.arg1 = GameHandler.ACTION_UPDATETIMER;
+		msg.arg2 = timer;
+		handler.sendMessage(msg);
+	}
+
+	private class Timer extends Thread {
+		@Override
+		public void run() {
+			try {
+				while(timer > 0) {
+					sleep(1000);
+					timer--;
+					sendTimerUpdate();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override

@@ -9,13 +9,16 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class GameHandler extends Handler {
 	public final static int ACTION_ROOMDATA = 1000;
 	public final static int ACTION_ADDPLAYER = 1001;
 	public final static int ACTION_REMOVEPLAYER = 1002;
+	public final static int ACTION_UPDATETIMER = 1003;
 
 	public final static int STATUS_WAITING = 2000;
 
@@ -30,6 +33,8 @@ public class GameHandler extends Handler {
 	private int currentPlayerCount = 0;
 	private int startPlayerCount = 0;
 	private int maxPlayerCount = 0;
+
+	private boolean progressLaunched = false;
 
 	public GameHandler(Activity activity) {
 		this.activity = activity;
@@ -69,6 +74,21 @@ public class GameHandler extends Handler {
 			adapter.remove(msg.arg2);
 			currentPlayerCount--;
 			updateCounter();
+			break;
+		case ACTION_UPDATETIMER:
+			ProgressBar progress = (ProgressBar) activity.findViewById(R.id.game_waiting_progress);
+			if(!progressLaunched) {
+				progress.setVisibility(View.VISIBLE);
+				progress.setMax(msg.arg2);
+			}
+			progress.setProgress(msg.arg2);
+
+			TextView time = (TextView) activity.findViewById(R.id.game_waiting_time);
+			if(!progressLaunched) {
+				time.setVisibility(View.VISIBLE);
+				progressLaunched = true;
+			}
+			time.setText(activity.getResources().getString(R.string.game_waiting_time, msg.arg2));
 			break;
 		}
 	}
