@@ -77,18 +77,24 @@ public class GameHandler extends Handler {
 			break;
 		case ACTION_UPDATETIMER:
 			ProgressBar progress = (ProgressBar) activity.findViewById(R.id.game_waiting_progress);
-			if(!progressLaunched) {
-				progress.setVisibility(View.VISIBLE);
-				progress.setMax(msg.arg2);
-			}
-			progress.setProgress(msg.arg2);
-
 			TextView time = (TextView) activity.findViewById(R.id.game_waiting_time);
-			if(!progressLaunched) {
-				time.setVisibility(View.VISIBLE);
-				progressLaunched = true;
+			if(msg.arg2 == -1) {
+				progress.setVisibility(View.INVISIBLE);
+				time.setVisibility(View.INVISIBLE);
+				progressLaunched = false;
+			} else {
+				if(!progressLaunched) {
+					progress.setVisibility(View.VISIBLE);
+					progress.setMax(msg.arg2);
+				}
+				progress.setProgress(msg.arg2);
+
+				if(!progressLaunched) {
+					time.setVisibility(View.VISIBLE);
+					progressLaunched = true;
+				}
+				time.setText(activity.getResources().getString(R.string.game_waiting_time, msg.arg2));
 			}
-			time.setText(activity.getResources().getString(R.string.game_waiting_time, msg.arg2));
 			break;
 		}
 	}

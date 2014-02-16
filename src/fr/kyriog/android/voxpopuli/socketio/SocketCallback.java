@@ -18,6 +18,7 @@ import io.socket.SocketIOException;
 public class SocketCallback implements IOCallback {
 	private final Handler handler;
 	private int timer = -1;
+	private Timer timerThread;
 
 	public SocketCallback(Handler handler) {
 		this.handler = handler;
@@ -65,12 +66,19 @@ public class SocketCallback implements IOCallback {
 				} else if("updateTimer".equals(action)) {
 					int newTimer = (int) Math.floor(rootData.getInt("newValue")/1000);
 					if(timer != newTimer) {
-						if(timer == -1)
-							new Timer().start();
+						if(timer == -1) {
+							timerThread = new Timer();
+							timerThread.start();
+						}
 						Log.w("timer", "Timer not synchronized!");
 						timer = newTimer;
 						sendTimerUpdate();
 					}
+				} else if("removeTimer".equals(action)) {
+					if(timerThread != null && timerThread.isAlive())
+						timerThread.interrupt();
+					timer = -1;
+					sendTimerUpdate();
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -99,6 +107,8 @@ public class SocketCallback implements IOCallback {
 			try {
 				while(timer > 0) {
 					sleep(1000);
+					if(interrupted())
+						return;
 					timer--;
 					sendTimerUpdate();
 				}
