@@ -130,14 +130,17 @@ public class GameHandler extends Handler {
 			Button answerA = (Button) activity.findViewById(R.id.game_voting_answer_a);
 			answerA.setText(data.getString(BUNDLE_ANSWER_A));
 			answerA.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_A));
+			answerA.setEnabled(true);
 
 			Button answerB = (Button) activity.findViewById(R.id.game_voting_answer_b);
 			answerB.setText(data.getString(BUNDLE_ANSWER_B));
 			answerB.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_B));
+			answerB.setEnabled(true);
 
 			Button answerC = (Button) activity.findViewById(R.id.game_voting_answer_c);
 			answerC.setText(data.getString(BUNDLE_ANSWER_C));
 			answerC.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_C));
+			answerC.setEnabled(true);
 			break;
 		}
 	}
