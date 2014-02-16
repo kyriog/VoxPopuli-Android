@@ -42,10 +42,9 @@ public class SocketCallback implements IOCallback {
 							JSONObject jsonPlayer = jsonPlayers.getJSONObject(id);
 							Player player = new Player(jsonPlayer.getInt("user_id"));
 							player.setUsername(jsonPlayer.getString("screen_name"));
-							player.setAvatar(jsonPlayer.getString("avatar_url"));
+							player.setAvatarUrl(jsonPlayer.getString("avatar_url"));
 							players.add(player);
 						}
-
 						msg.obj = players;
 						handler.sendMessage(msg);
 					}

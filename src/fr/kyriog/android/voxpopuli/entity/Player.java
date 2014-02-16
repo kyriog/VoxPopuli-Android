@@ -1,8 +1,11 @@
 package fr.kyriog.android.voxpopuli.entity;
 
+import android.graphics.Bitmap;
+
 public class Player {
 	private int id;
-	private String avatar;
+	private String avatarUrl;
+	private Bitmap avatarBitmap;
 	private String username;
 
 	public Player(int id) {
@@ -17,12 +20,20 @@ public class Player {
 		this.id = id;
 	}
 
-	public String getAvatar() {
-		return avatar;
+	public String getAvatarUrl() {
+		return avatarUrl;
 	}
 
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
+	public void setAvatarUrl(String avatarUrl) {
+		this.avatarUrl = avatarUrl;
+	}
+
+	public Bitmap getAvatarBitmap() {
+		return avatarBitmap;
+	}
+
+	public void setAvatarBitmap(Bitmap avatarBitmap) {
+		this.avatarBitmap = avatarBitmap;
 	}
 
 	public String getUsername() {
