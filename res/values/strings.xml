@@ -13,5 +13,6 @@
 	<string name="game_waiting">Waiting</string>
 	<string name="game_waiting_time">%1$ds</string>
 	<string name="game_waiting_counter">%1$d/%2$d players (up to %3$d)</string>
+	<string name="game_voting_life_description">Life</string>
 
 </resources>

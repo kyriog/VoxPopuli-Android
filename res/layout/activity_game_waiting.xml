@@ -18,21 +18,21 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ProgressBar
-        android:id="@+id/game_waiting_progress"
+        android:id="@+id/game_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/game_waiting"
-        android:layout_toLeftOf="@+id/game_waiting_time"
+        android:layout_toLeftOf="@+id/game_time"
         android:visibility="invisible" />
 
     <TextView
-        android:id="@id/game_waiting_time"
+        android:id="@id/game_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/game_waiting_progress"
+        android:layout_alignTop="@id/game_progress"
         android:visibility="invisible" />
 
     <GridView
@@ -40,8 +40,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/game_waiting_counter"
-        android:layout_alignLeft="@+id/game_waiting_progress"
-        android:layout_below="@id/game_waiting_time"
+        android:layout_alignLeft="@+id/game_progress"
+        android:layout_below="@id/game_time"
         android:numColumns="2" >
 
     </GridView>

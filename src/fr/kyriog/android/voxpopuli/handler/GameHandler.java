@@ -19,6 +19,7 @@ public class GameHandler extends Handler {
 	public final static int ACTION_ADDPLAYER = 1001;
 	public final static int ACTION_REMOVEPLAYER = 1002;
 	public final static int ACTION_UPDATETIMER = 1003;
+	public final static int ACTION_GAINLIFE = 1004;
 
 	public final static int STATUS_WAITING = 2000;
 
@@ -35,6 +36,7 @@ public class GameHandler extends Handler {
 	private int maxPlayerCount = 0;
 
 	private boolean progressLaunched = false;
+	private boolean gameStarted = false;
 
 	public GameHandler(Activity activity) {
 		this.activity = activity;
@@ -76,8 +78,8 @@ public class GameHandler extends Handler {
 			updateCounter();
 			break;
 		case ACTION_UPDATETIMER:
-			ProgressBar progress = (ProgressBar) activity.findViewById(R.id.game_waiting_progress);
-			TextView time = (TextView) activity.findViewById(R.id.game_waiting_time);
+			ProgressBar progress = (ProgressBar) activity.findViewById(R.id.game_progress);
+			TextView time = (TextView) activity.findViewById(R.id.game_time);
 			if(msg.arg2 == -1) {
 				progress.setVisibility(View.INVISIBLE);
 				time.setVisibility(View.INVISIBLE);
@@ -95,6 +97,15 @@ public class GameHandler extends Handler {
 				}
 				time.setText(activity.getResources().getString(R.string.game_waiting_time, msg.arg2));
 			}
+			break;
+		case ACTION_GAINLIFE:
+			if(!gameStarted) {
+				activity.setContentView(R.layout.activity_game_voting);
+				progressLaunched = false;
+				gameStarted = true;
+			}
+			TextView lifecount = (TextView) activity.findViewById(R.id.game_voting_lifecount);
+			lifecount.setText(String.valueOf(msg.arg2));
 			break;
 		}
 	}

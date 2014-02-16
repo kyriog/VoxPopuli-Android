@@ -79,6 +79,10 @@ public class SocketCallback implements IOCallback {
 						timerThread.interrupt();
 					timer = -1;
 					sendTimerUpdate();
+				} else if("gainLife".equals(action)) {
+					msg.arg1 = GameHandler.ACTION_GAINLIFE;
+					msg.arg2 = rootData.getInt("newPoints");
+					handler.sendMessage(msg);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
