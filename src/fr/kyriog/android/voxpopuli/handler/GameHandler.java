@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GameHandler extends Handler {
 	public final static int ACTION_ROOMDATA = 1000;
@@ -30,6 +31,7 @@ public class GameHandler extends Handler {
 	public final static int ACTION_GAINLIFE = 1004;
 	public final static int ACTION_NEWQUESTION = 1005;
 	public final static int ACTION_SHOWVOTES = 1006;
+	public final static int ACTION_LOOSELIFE = 1007;
 
 	public final static int STATUS_WAITING = 2000;
 
@@ -168,6 +170,13 @@ public class GameHandler extends Handler {
 			TextView votesC = (TextView) activity.findViewById(R.id.game_voting_vote_c);
 			votesC.setText(String.valueOf(votesData.getInt(BUNDLE_ANSWER_C)));
 			votesC.setVisibility(View.VISIBLE);
+			break;
+		case ACTION_LOOSELIFE:
+			TextView lifecounter = (TextView) activity.findViewById(R.id.game_voting_lifecount);
+			lifecounter.setText(String.valueOf(msg.arg2));
+			String toastMsg = activity.getResources().getString(R.string.game_voting_looselife);
+			Toast toast = Toast.makeText(activity, toastMsg, Toast.LENGTH_SHORT);
+			toast.show();
 			break;
 		}
 	}

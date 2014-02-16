@@ -125,6 +125,10 @@ public class SocketCallback implements IOCallback {
 					}
 					msg.obj = data;
 					handler.sendMessage(msg);
+				} else if("looseLife".equals(action)) {
+					msg.arg1 = GameHandler.ACTION_LOOSELIFE;
+					msg.arg2 = rootData.getInt("newPoints"); // Nb of lifes
+					handler.sendMessage(msg);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
