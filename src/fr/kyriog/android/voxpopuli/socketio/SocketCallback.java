@@ -40,19 +40,30 @@ public class SocketCallback implements IOCallback {
 						for(int i = 0; i < jsonPlayers.length(); i++) {
 							String id = jsonId.getString(i);
 							JSONObject jsonPlayer = jsonPlayers.getJSONObject(id);
-							Player player = new Player(jsonPlayer.getInt("user_id"));
-							player.setUsername(jsonPlayer.getString("screen_name"));
-							player.setAvatarUrl(jsonPlayer.getString("avatar_url"));
+							Player player = createPlayerFromJSONObject(jsonPlayer);
 							players.add(player);
 						}
 						msg.obj = players;
 						handler.sendMessage(msg);
 					}
+				} else if("addPlayer".equals(action)) {
+					msg.arg1 = GameHandler.ACTION_ADDPLAYER;
+					JSONObject jsonPlayer = rootData.getJSONObject("player");
+					Player player = createPlayerFromJSONObject(jsonPlayer);
+					msg.obj = player;
+					handler.sendMessage(msg);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private Player createPlayerFromJSONObject(JSONObject jsonPlayer) throws JSONException {
+		Player player = new Player(jsonPlayer.getInt("user_id"));
+		player.setUsername(jsonPlayer.getString("screen_name"));
+		player.setAvatarUrl(jsonPlayer.getString("avatar_url"));
+		return player;
 	}
 
 	@Override

@@ -58,4 +58,9 @@ public class PlayerAdapter extends BaseAdapter {
 
 		return convertView;
 	}
+
+	public void add(Player player) {
+		players.add(player);
+		notifyDataSetChanged();
+	}
 }
