@@ -20,6 +20,7 @@ public class GameHandler extends Handler {
 	public final static int ACTION_REMOVEPLAYER = 1002;
 	public final static int ACTION_UPDATETIMER = 1003;
 	public final static int ACTION_GAINLIFE = 1004;
+	public final static int ACTION_NEWQUESTION = 1005;
 
 	public final static int STATUS_WAITING = 2000;
 
@@ -27,6 +28,10 @@ public class GameHandler extends Handler {
 	public final static String BUNDLE_CURRENT_PLAYER_COUNT = "currentPlayerCount";
 	public final static String BUNDLE_START_PLAYER_COUNT = "startPlayerCount";
 	public final static String BUNDLE_MAX_PLAYER_COUNT = "maxPlayerCount";
+	public final static String BUNDLE_QUESTION = "question";
+	public final static String BUNDLE_ANSWER_A = "answerA";
+	public final static String BUNDLE_ANSWER_B = "answerB";
+	public final static String BUNDLE_ANSWER_C = "answerC";
 
 	private final Activity activity;
 	private PlayerAdapter adapter;
@@ -106,6 +111,21 @@ public class GameHandler extends Handler {
 			}
 			TextView lifecount = (TextView) activity.findViewById(R.id.game_voting_lifecount);
 			lifecount.setText(String.valueOf(msg.arg2));
+			break;
+		case ACTION_NEWQUESTION:
+			Bundle data = (Bundle) msg.obj;
+
+			TextView question = (TextView) activity.findViewById(R.id.game_voting_question);
+			question.setText(data.getString(BUNDLE_QUESTION));
+
+			TextView answerA = (TextView) activity.findViewById(R.id.game_voting_answer_a);
+			answerA.setText(data.getString(BUNDLE_ANSWER_A));
+
+			TextView answerB = (TextView) activity.findViewById(R.id.game_voting_answer_b);
+			answerB.setText(data.getString(BUNDLE_ANSWER_B));
+
+			TextView answerC = (TextView) activity.findViewById(R.id.game_voting_answer_c);
+			answerC.setText(data.getString(BUNDLE_ANSWER_C));
 			break;
 		}
 	}

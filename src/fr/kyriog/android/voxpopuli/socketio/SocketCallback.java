@@ -83,6 +83,28 @@ public class SocketCallback implements IOCallback {
 					msg.arg1 = GameHandler.ACTION_GAINLIFE;
 					msg.arg2 = rootData.getInt("newPoints");
 					handler.sendMessage(msg);
+				} else if("newQuestion".equals(action)) {
+					msg.arg1 = GameHandler.ACTION_NEWQUESTION;
+					JSONObject jsonQuestion = rootData.getJSONObject("question");
+					JSONArray jsonAnswers = jsonQuestion.getJSONArray("answers");
+					Bundle question = new Bundle();
+					question.putString(GameHandler.BUNDLE_QUESTION, jsonQuestion.getString("content"));
+					for(int i = 0; i < 3; i++) {
+						String answer = jsonAnswers.getJSONArray(i).getString(1);
+						switch(i) {
+						case 0:
+							question.putString(GameHandler.BUNDLE_ANSWER_A, answer);
+							break;
+						case 1:
+							question.putString(GameHandler.BUNDLE_ANSWER_B, answer);
+							break;
+						case 2:
+							question.putString(GameHandler.BUNDLE_ANSWER_C, answer);
+							break;
+						}
+					}
+					msg.obj = question;
+					handler.sendMessage(msg);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
