@@ -75,9 +75,7 @@ public class SocketCallback implements IOCallback {
 						sendTimerUpdate();
 					}
 				} else if("removeTimer".equals(action)) {
-					if(timerThread != null && timerThread.isAlive())
-						timerThread.interrupt();
-					timer = -1;
+					resetTimer();
 					sendTimerUpdate();
 				} else if("gainLife".equals(action)) {
 					msg.arg1 = GameHandler.ACTION_GAINLIFE;
@@ -105,6 +103,7 @@ public class SocketCallback implements IOCallback {
 					}
 					msg.obj = question;
 					handler.sendMessage(msg);
+					resetTimer();
 				} else if("showVotes".equals(action)) {
 					msg.arg1 = GameHandler.ACTION_SHOWVOTES;
 					Bundle data = new Bundle();
@@ -125,6 +124,7 @@ public class SocketCallback implements IOCallback {
 					}
 					msg.obj = data;
 					handler.sendMessage(msg);
+					resetTimer();
 				} else if("looseLife".equals(action)) {
 					msg.arg1 = GameHandler.ACTION_LOOSELIFE;
 					msg.arg2 = rootData.getInt("newPoints"); // Nb of lifes
@@ -149,6 +149,13 @@ public class SocketCallback implements IOCallback {
 		msg.arg1 = GameHandler.ACTION_UPDATETIMER;
 		msg.arg2 = timer;
 		handler.sendMessage(msg);
+	}
+
+	private void resetTimer() {
+		if(timerThread != null && timerThread.isAlive())
+			timerThread.interrupt();
+		timer = -1;
+		sendTimerUpdate();
 	}
 
 	private class Timer extends Thread {
