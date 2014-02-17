@@ -65,7 +65,8 @@ public class SocketCallback implements IOCallback {
 					handler.sendMessage(msg);
 				} else if("updateTimer".equals(action)) {
 					int newTimer = (int) Math.floor(rootData.getInt("newValue")/1000);
-					if(timer != newTimer) {
+					int diff = Math.abs(timer - newTimer);
+					if(diff > 1) {
 						if(timer == -1) {
 							timerThread = new Timer();
 							timerThread.start();
