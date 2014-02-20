@@ -13,7 +13,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.BaseAdapter;
@@ -134,9 +133,7 @@ public class HomeActivity extends Activity {
 
 	public void launchGame(Game game) {
 		Intent intent = new Intent(this, GameActivity.class);
-		Log.i("userid", String.valueOf(prefs.getInt(VP_DATA_USER_ID, 0)));
 		intent.putExtra(VP_DATA_USER_ID, prefs.getInt(VP_DATA_USER_ID, 0));
-		Log.i("usersession", prefs.getString(VP_DATA_USER_SESSION, "nothing"));
 		intent.putExtra(VP_DATA_USER_SESSION, prefs.getString(VP_DATA_USER_SESSION, ""));
 		intent.putExtra(VP_DATA_GAME, game.getId());
 		startActivity(intent);
