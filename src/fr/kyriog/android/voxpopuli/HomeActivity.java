@@ -38,6 +38,11 @@ public class HomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		if(savedInstanceState != null)
 			games = savedInstanceState.getParcelableArrayList(SIS_GAMES);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
 		adapter = new HomeAdapter(this, games);
 		if(callback != null)
 			callback.setHandler(new HomeHandler(games, adapter));
@@ -63,6 +68,7 @@ public class HomeActivity extends Activity {
 		super.onUserLeaveHint();
 	}
 
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putParcelableArrayList(SIS_GAMES, games);
 		super.onSaveInstanceState(outState);
