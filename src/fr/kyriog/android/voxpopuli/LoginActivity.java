@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -20,6 +21,7 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
+		CookieManager.getInstance().removeAllCookie();
 		WebView web = (WebView) findViewById(R.id.login_webview);
 		WebSettings settings = web.getSettings();
 		settings.setJavaScriptEnabled(true);

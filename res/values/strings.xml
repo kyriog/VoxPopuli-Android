@@ -18,5 +18,6 @@
 	<string name="game_ending_congratulation">Congratulations to</string>
 	<string name="game_ending_and">and</string>
 	<string name="game_ending_newgame">New game</string>
+	<string name="home_logout">Log out</string>
 
 </resources>

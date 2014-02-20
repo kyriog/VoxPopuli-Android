@@ -14,6 +14,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -49,10 +51,8 @@ public class HomeActivity extends Activity {
 		prefs = getPreferences(MODE_PRIVATE);
 		if(prefs.contains(VP_DATA_USER_ID) && prefs.contains(VP_DATA_USER_SESSION))
 			loadGames();
-		else {
-			Intent intent = new Intent(this, LoginActivity.class);
-			startActivityForResult(intent, LOGIN_REQUEST_CODE);
-		}
+		else
+			launchLogin();
 	}
 
 	@Override
@@ -69,6 +69,12 @@ public class HomeActivity extends Activity {
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.home, menu);
+		return true;
+	}
+
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putParcelableArrayList(SIS_GAMES, games);
 		super.onSaveInstanceState(outState);
@@ -77,6 +83,7 @@ public class HomeActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		if(resultCode == Activity.RESULT_OK) {
+			games.clear();
 			Bundle userData = data.getExtras();
 
 			SharedPreferences.Editor editor = prefs.edit();
@@ -86,6 +93,21 @@ public class HomeActivity extends Activity {
 			loadGames();
 		} else
 			finish();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		case R.id.home_menu_logout:
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.remove(VP_DATA_USER_ID);
+			editor.remove(VP_DATA_USER_SESSION);
+			editor.commit();
+			launchLogin();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	private void loadGames() {
@@ -120,6 +142,11 @@ public class HomeActivity extends Activity {
 		intent.putExtra(VP_DATA_GAME, game.getId());
 		startActivity(intent);
 		clearSocket();
+	}
+
+	private void launchLogin() {
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivityForResult(intent, LOGIN_REQUEST_CODE);
 	}
 
 	private void clearSocket() {
