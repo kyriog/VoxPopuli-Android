@@ -111,21 +111,20 @@ public class HomeActivity extends Activity {
 	}
 
 	private void loadGames() {
-		if(socket == null) {
+		if(callback == null)
+			callback = new HomeCallback(new HomeHandler(games, adapter));
+		if(socket == null || !socket.isConnected()) {
 			StringBuilder header = new StringBuilder();
 			header.append("user_id=" + prefs.getInt(HomeActivity.VP_DATA_USER_ID, 0));
 			header.append("&user_session=" + prefs.getString(HomeActivity.VP_DATA_USER_SESSION, ""));
 			header.append("&page=index");
 			try {
 				socket = new SocketIO("http://ks.richie.fr:443/lldpgn", header.toString());
+				socket.connect(callback);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
 		}
-		if(callback == null)
-			callback = new HomeCallback(new HomeHandler(games, adapter));
-		if(!socket.isConnected())
-			socket.connect(callback);
 
 		setContentView(R.layout.activity_home);
 
