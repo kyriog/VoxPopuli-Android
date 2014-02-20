@@ -26,7 +26,8 @@
         </activity>
         <activity
             android:name="fr.kyriog.android.voxpopuli.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name="fr.kyriog.android.voxpopuli.GameActivity"
             android:label="@string/title_activity_game" >
