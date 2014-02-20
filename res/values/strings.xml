@@ -7,8 +7,8 @@
     
     <string name="connecting">Connecting to server…</string>
     
-    <string name="home_username">You are %1$s</string>
-    <string name="home_join">Join game</string>
+    <string name="home_waiting_games">Waiting games</string>
+    <string name="home_game_players">%1$d/%2$d</string>
     
 	<string name="game_waiting">Waiting</string>
 	<string name="game_waiting_time">%1$ds</string>

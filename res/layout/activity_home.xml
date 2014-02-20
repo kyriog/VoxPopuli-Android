@@ -9,19 +9,20 @@
     tools:context=".HomeActivity" >
 
     <TextView
-        android:id="@+id/home_username"
+        android:id="@+id/home_waiting_games"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="@string/home_username" />
-
-    <Button
-        android:id="@+id/home_join"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/home_username"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="@string/home_join" />
+        android:text="@string/home_waiting_games"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ListView
+        android:id="@+id/home_games"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/home_waiting_games" >
+    </ListView>
 
 </RelativeLayout>
