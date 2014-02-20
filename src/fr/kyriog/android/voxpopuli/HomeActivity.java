@@ -51,6 +51,18 @@ public class HomeActivity extends Activity {
 	}
 
 	@Override
+	protected void onDestroy() {
+		if(isFinishing())
+			clearSocket();
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onUserLeaveHint() {
+		clearSocket();
+		super.onUserLeaveHint();
+	}
+
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putParcelableArrayList(SIS_GAMES, games);
 		super.onSaveInstanceState(outState);
@@ -101,5 +113,13 @@ public class HomeActivity extends Activity {
 		intent.putExtra(VP_DATA_USER_SESSION, prefs.getString(VP_DATA_USER_SESSION, ""));
 		intent.putExtra(VP_DATA_GAME, game.getId());
 		startActivity(intent);
+		clearSocket();
+	}
+
+	private void clearSocket() {
+		if(socket != null)
+			socket.disconnect();
+		socket = null;
+		callback = null;
 	}
 }
