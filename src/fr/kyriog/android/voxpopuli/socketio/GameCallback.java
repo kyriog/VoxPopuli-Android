@@ -12,16 +12,14 @@ import android.util.Log;
 import fr.kyriog.android.voxpopuli.entity.Player;
 import fr.kyriog.android.voxpopuli.handler.GameHandler;
 import io.socket.IOAcknowledge;
-import io.socket.IOCallback;
 import io.socket.SocketIOException;
 
-public class SocketCallback implements IOCallback {
-	private final Handler handler;
+public class GameCallback extends BaseCallback {
 	private int timer = -1;
 	private Timer timerThread;
 
-	public SocketCallback(Handler handler) {
-		this.handler = handler;
+	public GameCallback(Handler handler) {
+		super(handler);
 	}
 
 	@Override
@@ -62,7 +60,7 @@ public class SocketCallback implements IOCallback {
 					handler.sendMessage(msg);
 				} else if("removePlayer".equals(action)) {
 					msg.arg1 = GameHandler.ACTION_REMOVEPLAYER;
-					msg.arg2 = rootData.getInt("player"); // Player ID
+					msg.obj = rootData.getString("player"); // Player ID
 					handler.sendMessage(msg);
 				} else if("updateTimer".equals(action)) {
 					int newTimer = (int) Math.floor(rootData.getInt("newValue")/1000);
@@ -154,7 +152,7 @@ public class SocketCallback implements IOCallback {
 	}
 
 	private Player createPlayerFromJSONObject(JSONObject jsonPlayer) throws JSONException {
-		Player player = new Player(jsonPlayer.getInt("user_id"));
+		Player player = new Player(jsonPlayer.getString("user_id"));
 		player.setUsername(jsonPlayer.getString("screen_name"));
 		player.setAvatarUrl(jsonPlayer.getString("avatar_url"));
 		return player;

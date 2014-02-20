@@ -7,6 +7,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import fr.kyriog.android.voxpopuli.GameActivity;
 import fr.kyriog.android.voxpopuli.HomeActivity;
 import fr.kyriog.android.voxpopuli.R;
 import fr.kyriog.android.voxpopuli.adapter.PlayerAdapter;
@@ -20,7 +21,6 @@ import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -49,18 +49,14 @@ public class GameHandler extends Handler {
 	public final static String BUNDLE_ANSWER_C = "answerC";
 	public final static String BUNDLE_GAME = "game";
 
-	private final Activity activity;
+	private final GameActivity activity;
 	private final SocketIO socket;
 	private PlayerAdapter adapter;
-
-	private int currentPlayerCount = 0;
-	private int startPlayerCount = 0;
-	private int maxPlayerCount = 0;
 
 	private boolean progressLaunched = false;
 	private boolean gameStarted = false;
 
-	public GameHandler(Activity activity, SocketIO socket) {
+	public GameHandler(GameActivity activity, SocketIO socket) {
 		this.activity = activity;
 		this.socket = socket;
 	}
@@ -72,34 +68,21 @@ public class GameHandler extends Handler {
 		case ACTION_ROOMDATA:
 			switch(msg.arg2) {
 			case STATUS_WAITING:
-				activity.setContentView(R.layout.activity_game_waiting);
-
 				Bundle data = (Bundle) msg.obj;
 				List<Player> players = data.getParcelableArrayList(BUNDLE_PLAYERS);
-				currentPlayerCount = data.getInt(BUNDLE_CURRENT_PLAYER_COUNT);
-				startPlayerCount = data.getInt(BUNDLE_START_PLAYER_COUNT);
-				maxPlayerCount = data.getInt(BUNDLE_MAX_PLAYER_COUNT);
+				int currentPlayerCount = data.getInt(BUNDLE_CURRENT_PLAYER_COUNT);
+				int startPlayerCount = data.getInt(BUNDLE_START_PLAYER_COUNT);
+				int maxPlayerCount = data.getInt(BUNDLE_MAX_PLAYER_COUNT);
 
-				if(adapter == null)
-					adapter = new PlayerAdapter(activity, players);
-
-				GridView grid = (GridView) activity.findViewById(R.id.game_waiting_players);
-				grid.setAdapter(adapter);
-
-				updateCounter();
+				activity.onWaiting(players, currentPlayerCount, startPlayerCount, maxPlayerCount);
 				break;
 			}
 			break;
 		case ACTION_ADDPLAYER:
-			Player player = (Player) msg.obj;
-			adapter.add(player);
-			currentPlayerCount++;
-			updateCounter();
+			activity.onAddPlayer((Player) msg.obj);
 			break;
 		case ACTION_REMOVEPLAYER:
-			adapter.remove(msg.arg2);
-			currentPlayerCount--;
-			updateCounter();
+			activity.onRemovePlayer((String) msg.obj);
 			break;
 		case ACTION_UPDATETIMER:
 			ProgressBar progress = (ProgressBar) activity.findViewById(R.id.game_progress);
@@ -228,15 +211,6 @@ public class GameHandler extends Handler {
 			});
 			break;
 		}
-	}
-
-	private void updateCounter() {
-		TextView counter = (TextView) activity.findViewById(R.id.game_waiting_counter);
-		String counterText = activity.getResources().getString(R.string.game_waiting_counter,
-				currentPlayerCount,
-				startPlayerCount,
-				maxPlayerCount);
-		counter.setText(counterText);
 	}
 
 	private class OnAnswerListener implements OnClickListener {

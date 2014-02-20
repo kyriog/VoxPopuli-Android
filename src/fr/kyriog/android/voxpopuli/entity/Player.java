@@ -5,20 +5,20 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Player implements Parcelable {
-	private int id;
+	private String id;
 	private String avatarUrl;
 	private Bitmap avatarBitmap;
 	private String username;
 
-	public Player(int id) {
+	public Player(String id) {
 		this.id = id;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -53,9 +53,9 @@ public class Player implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(id);
 		dest.writeParcelable(avatarBitmap, 0);
 		String[] data = new String[] {
+				id,
 				avatarUrl,
 				username
 		};
@@ -75,11 +75,11 @@ public class Player implements Parcelable {
 	};
 
 	public Player(Parcel in) {
-		id = in.readInt();
 		avatarBitmap = in.readParcelable(Bitmap.class.getClassLoader());
-		String[] data = new String[2];
+		String[] data = new String[3];
 		in.readStringArray(data);
-		avatarUrl = data[0];
-		username = data[1];
+		id = data[0];
+		avatarUrl = data[1];
+		username = data[2];
 	}
 }

@@ -1,6 +1,5 @@
 package fr.kyriog.android.voxpopuli.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.kyriog.android.voxpopuli.R;
@@ -36,7 +35,7 @@ public class PlayerAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int position) {
-		return players.get(position).getId();
+		return position;
 	}
 
 	@Override
@@ -58,22 +57,6 @@ public class PlayerAdapter extends BaseAdapter {
 		}
 
 		return convertView;
-	}
-
-	public void add(Player player) {
-		players.add(player);
-		notifyDataSetChanged();
-	}
-
-	public void remove(int playerId) {
-		List<Player> forPlayers = new ArrayList<Player>(players);
-		for(Player player : forPlayers) {
-			if(player.getId() == playerId) {
-				players.remove(player);
-				notifyDataSetChanged();
-				return;
-			}
-		}
 	}
 
 	public Player getPlayerByUsername(String username) {
