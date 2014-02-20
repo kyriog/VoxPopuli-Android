@@ -52,7 +52,7 @@ public class LoginActivity extends Activity {
 		public void getHtml(String rawHtml) {
 			try {
 				JSONObject data = new JSONObject(rawHtml);
-				int userId = data.getInt("user_id");
+				String userId = data.getString("user_id");
 				String userSession = data.getString("user_session");
 
 				Intent intent = new Intent();

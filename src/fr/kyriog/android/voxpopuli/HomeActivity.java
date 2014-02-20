@@ -86,7 +86,7 @@ public class HomeActivity extends Activity {
 			Bundle userData = data.getExtras();
 
 			SharedPreferences.Editor editor = prefs.edit();
-			editor.putInt(VP_DATA_USER_ID, userData.getInt(VP_DATA_USER_ID));
+			editor.putString(VP_DATA_USER_ID, userData.getString(VP_DATA_USER_ID));
 			editor.putString(VP_DATA_USER_SESSION, userData.getString(VP_DATA_USER_SESSION));
 			editor.commit();
 			loadGames();
@@ -114,7 +114,7 @@ public class HomeActivity extends Activity {
 			callback = new HomeCallback(new HomeHandler(games, adapter));
 		if(socket == null || !socket.isConnected()) {
 			StringBuilder header = new StringBuilder();
-			header.append("user_id=" + prefs.getInt(HomeActivity.VP_DATA_USER_ID, 0));
+			header.append("user_id=" + prefs.getString(HomeActivity.VP_DATA_USER_ID, ""));
 			header.append("&user_session=" + prefs.getString(HomeActivity.VP_DATA_USER_SESSION, ""));
 			header.append("&page=index");
 			try {
@@ -133,7 +133,7 @@ public class HomeActivity extends Activity {
 
 	public void launchGame(Game game) {
 		Intent intent = new Intent(this, GameActivity.class);
-		intent.putExtra(VP_DATA_USER_ID, prefs.getInt(VP_DATA_USER_ID, 0));
+		intent.putExtra(VP_DATA_USER_ID, prefs.getString(VP_DATA_USER_ID, ""));
 		intent.putExtra(VP_DATA_USER_SESSION, prefs.getString(VP_DATA_USER_SESSION, ""));
 		intent.putExtra(VP_DATA_GAME, game.getId());
 		startActivity(intent);
