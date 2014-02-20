@@ -24,7 +24,6 @@
         android:layout_alignBottom="@+id/game_voting_life"
         android:layout_marginRight="2dp"
         android:layout_toLeftOf="@+id/game_voting_life"
-        android:text="3"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ProgressBar
