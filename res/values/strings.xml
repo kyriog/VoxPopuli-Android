@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="app_name">Vox Populi</string>
-    <string name="title_activity_login">Login using Twitter</string>
-    <string name="title_activity_game">Game: %1$s</string>
     
-    <string name="connecting">Connecting to server…</string>
+	<string name="app_name">Vox Populi</string>
+	<string name="title_activity_login">Connexion avec Twitter</string>
+	<string name="title_activity_game">Partie : %1$s</string>
     
-    <string name="home_waiting_games">Waiting games</string>
-    <string name="home_game_players">%1$d/%2$d</string>
+	<string name="connecting">Connexion au serveur…</string>
     
-	<string name="game_waiting">Waiting</string>
+	<string name="home_waiting_games">Parties en attente</string>
+	<string name="home_game_players">%1$d/%2$d</string>
+    
+	<string name="game_waiting">En attente</string>
 	<string name="game_waiting_time">%1$ds</string>
-	<string name="game_waiting_counter">%1$d/%2$d players (up to %3$d)</string>
-	<string name="game_voting_life_description">Life</string>
-	<string name="game_voting_looselife_one">You loose a life.</string>
-	<string name="game_voting_looselife_more">You loose %1$d lifes.</string>
-	<string name="game_ending_congratulation">Congratulations to</string>
-	<string name="game_ending_and">and</string>
-	<string name="game_ending_newgame">New game</string>
-	<string name="home_logout">Log out</string>
-
+	<string name="game_waiting_counter">%1$d/%2$d joueurs (jusqu\'à %3$d)</string>
+	<string name="game_voting_life_description">Vie</string>
+	<string name="game_voting_looselife_one">Vous perdez une vie.</string>
+	<string name="game_voting_looselife_more">Vous perdez %1$d vies.</string>
+	<string name="game_ending_congratulation">Félicitations à</string>
+	<string name="game_ending_and">et</string>
+	<string name="game_ending_newgame">Nouvelle partie</string>
+	<string name="home_logout">Déconnexion</string>
+    
 </resources>
