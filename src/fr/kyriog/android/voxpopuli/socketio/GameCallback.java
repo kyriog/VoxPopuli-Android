@@ -31,7 +31,6 @@ public class GameCallback extends BaseCallback {
 				Message msg = new Message();
 				JSONObject rootData = (JSONObject) args[0];
 				String action = rootData.getString("action");
-				Log.i("action", action);
 				if("roomData".equals(action)) {
 					msg.arg1 = GameHandler.ACTION_ROOMDATA;
 					JSONObject data = rootData.getJSONObject("roomData");
