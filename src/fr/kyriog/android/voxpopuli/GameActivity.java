@@ -100,18 +100,21 @@ public class GameActivity extends Activity {
 		case GAMESTATUS_VOTING:
 			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
 			if(savedInstanceState.containsKey(GAMESTATUS_VOTING_QUESTION)) {
-				Question question = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
-				onNewQuestion(question);
+				Question questionVoting = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
+				onNewQuestion(questionVoting);
 			}
 			break;
 		case GAMESTATUS_VOTED: // Could it be optimized?
 			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
-			if(savedInstanceState.containsKey(GAMESTATUS_VOTING_QUESTION)) {
-				Question question = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
-				onNewQuestion(question);
-			}
+			Question questionVoted = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
+			onNewQuestion(questionVoted);
 			onVote();
 			break;
+		case GAMESTATUS_RESULTS:
+			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
+			Question questionResults = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
+			onNewQuestion(questionResults);
+			onShowVotes(questionResults);
 		}
 
 		if(savedInstanceState != null && savedInstanceState.getInt(GAMESTATUS_TIMER) != -1) {
@@ -135,6 +138,7 @@ public class GameActivity extends Activity {
 			break;
 		case GAMESTATUS_VOTING:
 		case GAMESTATUS_VOTED:
+		case GAMESTATUS_RESULTS:
 			outState.putInt(GAMESTATUS_VOTING_LIFECOUNT, lifeCount);
 			if(question != null)
 				outState.putParcelable(GAMESTATUS_VOTING_QUESTION, question);
@@ -239,6 +243,29 @@ public class GameActivity extends Activity {
 		answerB.setEnabled(false);
 		Button answerC = (Button) findViewById(R.id.game_voting_answer_c);
 		answerC.setEnabled(false);
+	}
+
+	public void onShowVotes(Question question) {
+		gameStatus = GAMESTATUS_RESULTS;
+
+		Button answerDisableA = (Button) findViewById(R.id.game_voting_answer_a);
+		answerDisableA.setEnabled(false);
+		Button answerDisableB = (Button) findViewById(R.id.game_voting_answer_b);
+		answerDisableB.setEnabled(false);
+		Button answerDisableC = (Button) findViewById(R.id.game_voting_answer_c);
+		answerDisableC.setEnabled(false);
+
+		TextView votesA = (TextView) findViewById(R.id.game_voting_vote_a);
+		votesA.setText(String.valueOf(question.getResultA()));
+		votesA.setVisibility(View.VISIBLE);
+
+		TextView votesB = (TextView) findViewById(R.id.game_voting_vote_b);
+		votesB.setText(String.valueOf(question.getResultB()));
+		votesB.setVisibility(View.VISIBLE);
+
+		TextView votesC = (TextView) findViewById(R.id.game_voting_vote_c);
+		votesC.setText(String.valueOf(question.getResultC()));
+		votesC.setVisibility(View.VISIBLE);
 	}
 
 	public void onAddPlayer(Player player) {

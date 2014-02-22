@@ -81,35 +81,10 @@ public class GameHandler extends Handler {
 			activity.onGainLife(msg.arg2);
 			break;
 		case ACTION_NEWQUESTION:
-			Bundle questionData = (Bundle) msg.obj;
-			String questionText = questionData.getString(BUNDLE_QUESTION);
-			String answerAText = questionData.getString(BUNDLE_ANSWER_A);
-			String answerBText = questionData.getString(BUNDLE_ANSWER_B);
-			String answerCText = questionData.getString(BUNDLE_ANSWER_C);
-			Question question = new Question(questionText, answerAText, answerBText, answerCText);
-			activity.onNewQuestion(question);
+			activity.onNewQuestion((Question) msg.obj);
 			break;
 		case ACTION_SHOWVOTES:
-			Bundle votesData = (Bundle) msg.obj;
-
-			Button answerDisableA = (Button) activity.findViewById(R.id.game_voting_answer_a);
-			answerDisableA.setEnabled(false);
-			Button answerDisableB = (Button) activity.findViewById(R.id.game_voting_answer_b);
-			answerDisableB.setEnabled(false);
-			Button answerDisableC = (Button) activity.findViewById(R.id.game_voting_answer_c);
-			answerDisableC.setEnabled(false);
-
-			TextView votesA = (TextView) activity.findViewById(R.id.game_voting_vote_a);
-			votesA.setText(String.valueOf(votesData.getInt(BUNDLE_ANSWER_A)));
-			votesA.setVisibility(View.VISIBLE);
-
-			TextView votesB = (TextView) activity.findViewById(R.id.game_voting_vote_b);
-			votesB.setText(String.valueOf(votesData.getInt(BUNDLE_ANSWER_B)));
-			votesB.setVisibility(View.VISIBLE);
-
-			TextView votesC = (TextView) activity.findViewById(R.id.game_voting_vote_c);
-			votesC.setText(String.valueOf(votesData.getInt(BUNDLE_ANSWER_C)));
-			votesC.setVisibility(View.VISIBLE);
+			activity.onShowVotes((Question) msg.obj);
 			break;
 		case ACTION_LOOSELIFE:
 			TextView lifecounter = (TextView) activity.findViewById(R.id.game_voting_lifecount);

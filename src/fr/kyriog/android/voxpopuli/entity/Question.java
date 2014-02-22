@@ -8,6 +8,9 @@ public class Question implements Parcelable {
 	private final String answerA;
 	private final String answerB;
 	private final String answerC;
+	private int resultA;
+	private int resultB;
+	private int resultC;
 
 	public Question(String question, String answerA, String answerB, String answerC) {
 		this.question = question;
@@ -30,6 +33,30 @@ public class Question implements Parcelable {
 
 	public String getAnswerC() {
 		return answerC;
+	}
+
+	public int getResultA() {
+		return resultA;
+	}
+
+	public void setResultA(int resultA) {
+		this.resultA = resultA;
+	}
+
+	public int getResultB() {
+		return resultB;
+	}
+
+	public void setResultB(int resultB) {
+		this.resultB = resultB;
+	}
+
+	public int getResultC() {
+		return resultC;
+	}
+
+	public void setResultC(int resultC) {
+		this.resultC = resultC;
 	}
 
 	@Override

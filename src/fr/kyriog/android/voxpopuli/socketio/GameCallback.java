@@ -10,11 +10,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import fr.kyriog.android.voxpopuli.entity.Player;
+import fr.kyriog.android.voxpopuli.entity.Question;
 import fr.kyriog.android.voxpopuli.handler.GameHandler;
 import io.socket.IOAcknowledge;
 import io.socket.SocketIOException;
 
 public class GameCallback extends BaseCallback {
+	private Question question;
 	private int timer = -1;
 	private Timer timerThread;
 
@@ -86,44 +88,44 @@ public class GameCallback extends BaseCallback {
 					msg.arg1 = GameHandler.ACTION_NEWQUESTION;
 					JSONObject jsonQuestion = rootData.getJSONObject("question");
 					JSONArray jsonAnswers = jsonQuestion.getJSONArray("answers");
-					Bundle question = new Bundle();
-					question.putString(GameHandler.BUNDLE_QUESTION, jsonQuestion.getString("content"));
+					String questionText = jsonQuestion.getString("content");
+					String answerA = null,  answerB = null, answerC = null;
 					for(int i = 0; i < 3; i++) {
 						String answer = jsonAnswers.getJSONArray(i).getString(1);
 						switch(i) {
 						case 0:
-							question.putString(GameHandler.BUNDLE_ANSWER_A, answer);
+							answerA = answer;
 							break;
 						case 1:
-							question.putString(GameHandler.BUNDLE_ANSWER_B, answer);
+							answerB = answer;
 							break;
 						case 2:
-							question.putString(GameHandler.BUNDLE_ANSWER_C, answer);
+							answerC = answer;
 							break;
 						}
 					}
+					question = new Question(questionText, answerA, answerB, answerC);
 					msg.obj = question;
 					handler.sendMessage(msg);
 					resetTimer();
 				} else if("showVotes".equals(action)) {
 					msg.arg1 = GameHandler.ACTION_SHOWVOTES;
-					Bundle data = new Bundle();
 					JSONArray votes = rootData.getJSONArray("votes");
 					for(int i = 0; i < 3; i++) {
 						int vote = votes.getInt(i);
 						switch(i) {
 						case 0:
-							data.putInt(GameHandler.BUNDLE_ANSWER_A, vote);
+							question.setResultA(vote);
 							break;
 						case 1:
-							data.putInt(GameHandler.BUNDLE_ANSWER_B, vote);
+							question.setResultB(vote);
 							break;
 						case 2:
-							data.putInt(GameHandler.BUNDLE_ANSWER_C, vote);
+							question.setResultC(vote);
 							break;
 						}
 					}
-					msg.obj = data;
+					msg.obj = question;
 					handler.sendMessage(msg);
 					resetTimer();
 				} else if("looseLife".equals(action)) {
