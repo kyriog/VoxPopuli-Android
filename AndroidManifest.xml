@@ -29,8 +29,7 @@
             android:label="@string/title_activity_login"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="fr.kyriog.android.voxpopuli.GameActivity"
-            android:label="@string/title_activity_game" >
+            android:name="fr.kyriog.android.voxpopuli.GameActivity">
         </activity>
     </application>
 

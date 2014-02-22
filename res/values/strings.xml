@@ -3,7 +3,6 @@
     
 	<string name="app_name">Vox Populi</string>
 	<string name="title_activity_login">Connexion avec Twitter</string>
-	<string name="title_activity_game">Partie : %1$s</string>
     
 	<string name="connecting">Connexion au serveur…</string>
     
@@ -11,11 +10,14 @@
 	<string name="home_game_players">%1$d/%2$d</string>
     
 	<string name="game_waiting">En attente</string>
+	<string name="game_waiting_title">Partie : %1$s</string>
 	<string name="game_waiting_time">%1$ds</string>
 	<string name="game_waiting_counter">%1$d/%2$d joueurs (jusqu\'à %3$d)</string>
+	<string name="game_voting_title">Question n°%1$d</string>
 	<string name="game_voting_life_description">Vie</string>
 	<string name="game_voting_looselife_one">Vous perdez une vie.</string>
 	<string name="game_voting_looselife_more">Vous perdez %1$d vies.</string>
+	<string name="game_ending_title">Partie terminée</string>
 	<string name="game_ending_congratulation">Félicitations à</string>
 	<string name="game_ending_and">et</string>
 	<string name="game_ending_newgame">Nouvelle partie</string>
