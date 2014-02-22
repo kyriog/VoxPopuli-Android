@@ -258,13 +258,13 @@ public class GameActivity extends Activity {
 		answerC.setEnabled(true);
 
 		TextView votesInvisibleA = (TextView) findViewById(R.id.game_voting_vote_a);
-		votesInvisibleA.setVisibility(View.GONE);
+		votesInvisibleA.setVisibility(View.INVISIBLE);
 
 		TextView votesInvisibleB = (TextView) findViewById(R.id.game_voting_vote_b);
-		votesInvisibleB.setVisibility(View.GONE);
+		votesInvisibleB.setVisibility(View.INVISIBLE);
 
 		TextView votesInvisibleC = (TextView) findViewById(R.id.game_voting_vote_c);
-		votesInvisibleC.setVisibility(View.GONE);
+		votesInvisibleC.setVisibility(View.INVISIBLE);
 	}
 
 	public void onVote() {
