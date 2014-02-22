@@ -1,17 +1,13 @@
 package fr.kyriog.android.voxpopuli.handler;
 
-import io.socket.SocketIO;
-
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import fr.kyriog.android.voxpopuli.GameActivity;
 import fr.kyriog.android.voxpopuli.HomeActivity;
 import fr.kyriog.android.voxpopuli.R;
 import fr.kyriog.android.voxpopuli.adapter.PlayerAdapter;
 import fr.kyriog.android.voxpopuli.entity.Player;
+import fr.kyriog.android.voxpopuli.entity.Question;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -49,12 +45,10 @@ public class GameHandler extends Handler {
 	public final static String BUNDLE_GAME = "game";
 
 	private final GameActivity activity;
-	private final SocketIO socket;
 	private PlayerAdapter adapter;
 
-	public GameHandler(GameActivity activity, SocketIO socket) {
+	public GameHandler(GameActivity activity) {
 		this.activity = activity;
-		this.socket = socket;
 	}
 
 	@SuppressLint("CutPasteId")
@@ -88,33 +82,12 @@ public class GameHandler extends Handler {
 			break;
 		case ACTION_NEWQUESTION:
 			Bundle questionData = (Bundle) msg.obj;
-
-			TextView question = (TextView) activity.findViewById(R.id.game_voting_question);
-			question.setText(questionData.getString(BUNDLE_QUESTION));
-
-			Button answerA = (Button) activity.findViewById(R.id.game_voting_answer_a);
-			answerA.setText(questionData.getString(BUNDLE_ANSWER_A));
-			answerA.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_A));
-			answerA.setEnabled(true);
-
-			Button answerB = (Button) activity.findViewById(R.id.game_voting_answer_b);
-			answerB.setText(questionData.getString(BUNDLE_ANSWER_B));
-			answerB.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_B));
-			answerB.setEnabled(true);
-
-			Button answerC = (Button) activity.findViewById(R.id.game_voting_answer_c);
-			answerC.setText(questionData.getString(BUNDLE_ANSWER_C));
-			answerC.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_C));
-			answerC.setEnabled(true);
-
-			TextView votesInvisibleA = (TextView) activity.findViewById(R.id.game_voting_vote_a);
-			votesInvisibleA.setVisibility(View.GONE);
-
-			TextView votesInvisibleB = (TextView) activity.findViewById(R.id.game_voting_vote_b);
-			votesInvisibleB.setVisibility(View.GONE);
-
-			TextView votesInvisibleC = (TextView) activity.findViewById(R.id.game_voting_vote_c);
-			votesInvisibleC.setVisibility(View.GONE);
+			String questionText = questionData.getString(BUNDLE_QUESTION);
+			String answerAText = questionData.getString(BUNDLE_ANSWER_A);
+			String answerBText = questionData.getString(BUNDLE_ANSWER_B);
+			String answerCText = questionData.getString(BUNDLE_ANSWER_C);
+			Question question = new Question(questionText, answerAText, answerBText, answerCText);
+			activity.onNewQuestion(question);
 			break;
 		case ACTION_SHOWVOTES:
 			Bundle votesData = (Bundle) msg.obj;
@@ -182,36 +155,6 @@ public class GameHandler extends Handler {
 				}
 			});
 			break;
-		}
-	}
-
-	private class OnAnswerListener implements OnClickListener {
-		public final static int ANSWER_A = 0;
-		public final static int ANSWER_B = 1;
-		public final static int ANSWER_C = 2;
-
-		private final int answer;
-
-		public OnAnswerListener(int answer) {
-			this.answer = answer;
-		}
-
-		@Override
-		public void onClick(View v) {
-			try {
-				JSONObject data = new JSONObject();
-				data.put("action", "vote");
-				data.put("voteid", answer);
-				socket.emit("clientEvent", data);
-				Button answerA = (Button) activity.findViewById(R.id.game_voting_answer_a);
-				answerA.setEnabled(false);
-				Button answerB = (Button) activity.findViewById(R.id.game_voting_answer_b);
-				answerB.setEnabled(false);
-				Button answerC = (Button) activity.findViewById(R.id.game_voting_answer_c);
-				answerC.setEnabled(false);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 }

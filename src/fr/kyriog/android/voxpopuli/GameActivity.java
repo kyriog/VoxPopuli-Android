@@ -2,6 +2,7 @@ package fr.kyriog.android.voxpopuli;
 
 import fr.kyriog.android.voxpopuli.adapter.PlayerAdapter;
 import fr.kyriog.android.voxpopuli.entity.Player;
+import fr.kyriog.android.voxpopuli.entity.Question;
 import fr.kyriog.android.voxpopuli.handler.GameHandler;
 import fr.kyriog.android.voxpopuli.socketio.BaseCallback;
 import fr.kyriog.android.voxpopuli.socketio.GameCallback;
@@ -10,10 +11,15 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,6 +38,7 @@ public class GameActivity extends Activity {
 	private final static String GAMESTATUS_WAITING_NBMINPLAYERS = "waitingNbMinPlayers";
 	private final static String GAMESTATUS_WAITING_NBMAXPLAYERS = "waitingNbMaxPlayers";
 	private final static String GAMESTATUS_VOTING_LIFECOUNT = "votingLifeCount";
+	private final static String GAMESTATUS_VOTING_QUESTION = "votingQuestion";
 
 	private static SocketIO socket;
 	private static BaseCallback callback;
@@ -45,6 +52,8 @@ public class GameActivity extends Activity {
 	private int timer = -1;
 	private int maxTimer = -1;
 	private int lifeCount;
+	private Question question;
+	private boolean votingDisplayed = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +73,7 @@ public class GameActivity extends Activity {
 				e.printStackTrace();
 			}
 		}
-		GameHandler handler = new GameHandler(this, socket);
+		GameHandler handler = new GameHandler(this);
 		if(!socket.isConnected()) {
 			callback = new GameCallback(handler);
 			socket.connect(callback);
@@ -89,8 +98,20 @@ public class GameActivity extends Activity {
 			onWaiting(players, nbPlayers, nbMinPlayers, nbMaxPlayers);
 			break;
 		case GAMESTATUS_VOTING:
-			int lifeCount = savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT);
-			onGainLife(lifeCount);
+			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
+			if(savedInstanceState.containsKey(GAMESTATUS_VOTING_QUESTION)) {
+				Question question = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
+				onNewQuestion(question);
+			}
+			break;
+		case GAMESTATUS_VOTED: // Could it be optimized?
+			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
+			if(savedInstanceState.containsKey(GAMESTATUS_VOTING_QUESTION)) {
+				Question question = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
+				onNewQuestion(question);
+			}
+			onVote();
+			break;
 		}
 
 		if(savedInstanceState != null && savedInstanceState.getInt(GAMESTATUS_TIMER) != -1) {
@@ -103,18 +124,20 @@ public class GameActivity extends Activity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putInt(GAMESTATUS, gameStatus);
+		outState.putInt(GAMESTATUS_TIMER, timer);
+		outState.putInt(GAMESTATUS_MAXTIMER, maxTimer);
 		switch(gameStatus) {
 		case GAMESTATUS_WAITING:
 			outState.putParcelableArrayList(GAMESTATUS_WAITING_PLAYERS, players);
 			outState.putInt(GAMESTATUS_WAITING_NBPLAYERS, nbPlayers);
 			outState.putInt(GAMESTATUS_WAITING_NBMINPLAYERS, nbMinPlayers);
 			outState.putInt(GAMESTATUS_WAITING_NBMAXPLAYERS, nbMaxPlayers);
-
-			outState.putInt(GAMESTATUS_TIMER, timer);
-			outState.putInt(GAMESTATUS_MAXTIMER, maxTimer);
 			break;
 		case GAMESTATUS_VOTING:
+		case GAMESTATUS_VOTED:
 			outState.putInt(GAMESTATUS_VOTING_LIFECOUNT, lifeCount);
+			if(question != null)
+				outState.putParcelable(GAMESTATUS_VOTING_QUESTION, question);
 		}
 		super.onSaveInstanceState(outState);
 	}
@@ -158,14 +181,64 @@ public class GameActivity extends Activity {
 		updatePlayerCounter();
 	}
 
-	public void onGainLife(int newLife) {
-		if(gameStatus != GAMESTATUS_VOTING)
+	private void displayVoteLayout() {
+		if(!votingDisplayed) {
 			setContentView(R.layout.activity_game_voting);
-		gameStatus = GAMESTATUS_VOTING;
+			votingDisplayed = true;
+		}
+		gameStatus = GAMESTATUS_VOTING;;
+	}
+
+	public void onGainLife(int newLife) {
+		displayVoteLayout();
 
 		lifeCount = newLife;
 		TextView lifecount = (TextView) findViewById(R.id.game_voting_lifecount);
 		lifecount.setText(String.valueOf(newLife));
+	}
+
+	public void onNewQuestion(Question question) {
+		displayVoteLayout();
+
+		this.question = question;
+
+		TextView questionView = (TextView) findViewById(R.id.game_voting_question);
+		questionView.setText(question.getQuestion());
+
+		Button answerA = (Button) findViewById(R.id.game_voting_answer_a);
+		answerA.setText(question.getAnswerA());
+		answerA.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_A));
+		answerA.setEnabled(true);
+
+		Button answerB = (Button) findViewById(R.id.game_voting_answer_b);
+		answerB.setText(question.getAnswerB());
+		answerB.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_B));
+		answerB.setEnabled(true);
+
+		Button answerC = (Button) findViewById(R.id.game_voting_answer_c);
+		answerC.setText(question.getAnswerC());
+		answerC.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_C));
+		answerC.setEnabled(true);
+
+		TextView votesInvisibleA = (TextView) findViewById(R.id.game_voting_vote_a);
+		votesInvisibleA.setVisibility(View.GONE);
+
+		TextView votesInvisibleB = (TextView) findViewById(R.id.game_voting_vote_b);
+		votesInvisibleB.setVisibility(View.GONE);
+
+		TextView votesInvisibleC = (TextView) findViewById(R.id.game_voting_vote_c);
+		votesInvisibleC.setVisibility(View.GONE);
+	}
+
+	public void onVote() {
+		gameStatus = GAMESTATUS_VOTED;
+
+		Button answerA = (Button) findViewById(R.id.game_voting_answer_a);
+		answerA.setEnabled(false);
+		Button answerB = (Button) findViewById(R.id.game_voting_answer_b);
+		answerB.setEnabled(false);
+		Button answerC = (Button) findViewById(R.id.game_voting_answer_c);
+		answerC.setEnabled(false);
 	}
 
 	public void onAddPlayer(Player player) {
@@ -207,6 +280,31 @@ public class GameActivity extends Activity {
 
 			progress.setProgress(timer);
 			time.setText(getResources().getString(R.string.game_waiting_time, timer));
+		}
+	}
+
+	private class OnAnswerListener implements OnClickListener {
+		public final static int ANSWER_A = 0;
+		public final static int ANSWER_B = 1;
+		public final static int ANSWER_C = 2;
+
+		private final int answer;
+
+		public OnAnswerListener(int answer) {
+			this.answer = answer;
+		}
+
+		@Override
+		public void onClick(View v) {
+			try {
+				JSONObject data = new JSONObject();
+				data.put("action", "vote");
+				data.put("voteid", answer);
+				socket.emit("clientEvent", data);
+				onVote();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
