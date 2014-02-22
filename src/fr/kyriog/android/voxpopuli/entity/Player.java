@@ -1,5 +1,7 @@
 package fr.kyriog.android.voxpopuli.entity;
 
+import java.util.List;
+
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -44,6 +46,16 @@ public class Player implements Parcelable {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public static Player getPlayerByUsername(List<Player> players, String username) {
+		if(username != null) {
+			for(Player player : players) {
+				if(username.equals(player.getUsername()))
+					return player;
+			}
+		}
+		return null;
 	}
 
 	@Override

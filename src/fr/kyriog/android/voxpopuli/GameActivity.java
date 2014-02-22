@@ -21,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,19 +35,20 @@ public class GameActivity extends Activity {
 	private final static String GAMESTATUS = "gameStatus";
 	private final static String GAMESTATUS_TIMER = "timer";
 	private final static String GAMESTATUS_MAXTIMER = "maxTimer";
-	private final static String GAMESTATUS_WAITING_PLAYERS = "waitingPlayers";
+	private final static String GAMESTATUS_PLAYERS = "players";
 	private final static String GAMESTATUS_WAITING_NBPLAYERS = "waitingNbPlayers";
 	private final static String GAMESTATUS_WAITING_NBMINPLAYERS = "waitingNbMinPlayers";
 	private final static String GAMESTATUS_WAITING_NBMAXPLAYERS = "waitingNbMaxPlayers";
 	private final static String GAMESTATUS_VOTING_LIFECOUNT = "votingLifeCount";
 	private final static String GAMESTATUS_VOTING_QUESTION = "votingQuestion";
+	private final static String GAMESTATUS_ENDED_WINNERS = "endedWinners";
 
 	private static SocketIO socket;
 	private static BaseCallback callback;
 
 	private BaseAdapter adapter;
 	private int gameStatus = 0;
-	private final ArrayList<Player> players = new ArrayList<Player>();
+	private ArrayList<Player> players = new ArrayList<Player>();
 	private int nbPlayers;
 	private int nbMinPlayers;
 	private int nbMaxPlayers;
@@ -55,6 +57,7 @@ public class GameActivity extends Activity {
 	private int lifeCount;
 	private Question question;
 	private boolean votingDisplayed = false;
+	private final String[] winners = new String[2];
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +84,10 @@ public class GameActivity extends Activity {
 		} else
 			callback.setHandler(handler);
 
-		if(savedInstanceState != null)
+		if(savedInstanceState != null) {
 			gameStatus = savedInstanceState.getInt(GAMESTATUS);
+			players = savedInstanceState.getParcelableArrayList(GAMESTATUS_PLAYERS);
+		}
 
 		setTitle(getResources().getString(R.string.title_activity_game, extras.getString(HomeActivity.VP_DATA_GAME)));
 		switch(gameStatus) {
@@ -92,11 +97,11 @@ public class GameActivity extends Activity {
 			text.setText(R.string.connecting);
 			break;
 		case GAMESTATUS_WAITING:
-			List<Player> players = savedInstanceState.getParcelableArrayList(GAMESTATUS_WAITING_PLAYERS);
 			int nbPlayers = savedInstanceState.getInt(GAMESTATUS_WAITING_NBPLAYERS);
 			int nbMinPlayers = savedInstanceState.getInt(GAMESTATUS_WAITING_NBMINPLAYERS);
 			int nbMaxPlayers = savedInstanceState.getInt(GAMESTATUS_WAITING_NBMAXPLAYERS);
-			onWaiting(players, nbPlayers, nbMinPlayers, nbMaxPlayers);
+			List<Player> playersClone = new ArrayList<Player>(players);
+			onWaiting(playersClone, nbPlayers, nbMinPlayers, nbMaxPlayers);
 			break;
 		case GAMESTATUS_VOTING:
 			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
@@ -116,9 +121,14 @@ public class GameActivity extends Activity {
 			Question questionResults = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
 			onNewQuestion(questionResults);
 			onShowVotes(questionResults);
+			break;
+		case GAMESTATUS_ENDED:
+			String[] winners = savedInstanceState.getStringArray(GAMESTATUS_ENDED_WINNERS);
+			onEndGame(winners[0], winners[1]);
+			break;
 		}
 
-		if(savedInstanceState != null && savedInstanceState.getInt(GAMESTATUS_TIMER) != -1) {
+		if(savedInstanceState != null && savedInstanceState.getInt(GAMESTATUS_MAXTIMER) != -1) {
 			int newTimer = savedInstanceState.getInt(GAMESTATUS_TIMER);
 			int maxTimer = savedInstanceState.getInt(GAMESTATUS_MAXTIMER);
 			onUpdateTimer(newTimer, maxTimer);
@@ -130,9 +140,9 @@ public class GameActivity extends Activity {
 		outState.putInt(GAMESTATUS, gameStatus);
 		outState.putInt(GAMESTATUS_TIMER, timer);
 		outState.putInt(GAMESTATUS_MAXTIMER, maxTimer);
+		outState.putParcelableArrayList(GAMESTATUS_PLAYERS, players);
 		switch(gameStatus) {
 		case GAMESTATUS_WAITING:
-			outState.putParcelableArrayList(GAMESTATUS_WAITING_PLAYERS, players);
 			outState.putInt(GAMESTATUS_WAITING_NBPLAYERS, nbPlayers);
 			outState.putInt(GAMESTATUS_WAITING_NBMINPLAYERS, nbMinPlayers);
 			outState.putInt(GAMESTATUS_WAITING_NBMAXPLAYERS, nbMaxPlayers);
@@ -143,6 +153,10 @@ public class GameActivity extends Activity {
 			outState.putInt(GAMESTATUS_VOTING_LIFECOUNT, lifeCount);
 			if(question != null)
 				outState.putParcelable(GAMESTATUS_VOTING_QUESTION, question);
+			break;
+		case GAMESTATUS_ENDED:
+			outState.putStringArray(GAMESTATUS_ENDED_WINNERS, winners);
+			break;
 		}
 		super.onSaveInstanceState(outState);
 	}
@@ -278,6 +292,39 @@ public class GameActivity extends Activity {
 		TextView votesC = (TextView) findViewById(R.id.game_voting_vote_c);
 		votesC.setText(String.valueOf(question.getResultC()));
 		votesC.setVisibility(View.VISIBLE);
+	}
+
+	public void onEndGame(String winner1, String winner2) {
+		gameStatus = GAMESTATUS_ENDED;
+		setContentView(R.layout.activity_game_ending);
+
+		winners[0] = winner1;
+		Player player1 = Player.getPlayerByUsername(players, winner1);
+		if(player1 != null) {
+			ImageView imageWinner1 = (ImageView) findViewById(R.id.game_ending_winner1_image);
+			imageWinner1.setImageBitmap(player1.getAvatarBitmap());
+
+			TextView usernameWinner1 = (TextView) findViewById(R.id.game_ending_winner1_username);
+			usernameWinner1.setText("@" + player1.getUsername());
+		}
+
+		winners[1] = winner2;
+		Player player2 = Player.getPlayerByUsername(players, winner2);
+		if(player2 != null) {
+			ImageView imageWinner2 = (ImageView) findViewById(R.id.game_ending_winner2_image);
+			imageWinner2.setImageBitmap(player2.getAvatarBitmap());
+
+			TextView usernameWinner2 = (TextView) findViewById(R.id.game_ending_winner2_username);
+			usernameWinner2.setText("@" + player2.getUsername());
+		}
+
+		Button newGame = (Button) findViewById(R.id.game_ending_newgame);
+		newGame.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				finish();
+			}
+		});
 	}
 
 	public void onAddPlayer(Player player) {

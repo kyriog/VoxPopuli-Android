@@ -133,6 +133,7 @@ public class GameCallback extends BaseCallback {
 					msg.arg2 = rootData.getInt("newPoints"); // Nb of lifes
 					handler.sendMessage(msg);
 				} else if("endGame".equals(action)) {
+					resetTimer();
 					msg.arg1 = GameHandler.ACTION_ENDGAME;
 					Bundle endData = new Bundle();
 					JSONArray jsonPlayers = rootData.getJSONArray("winners");
@@ -141,9 +142,6 @@ public class GameCallback extends BaseCallback {
 						players[i] = jsonPlayers.getString(i);
 					}
 					endData.putStringArray(GameHandler.BUNDLE_PLAYERS, players);
-					String jsonMessage = rootData.getString("message");
-					String newGame = jsonMessage.split("/game/", 2)[1].split("\\\"", 2)[0];
-					endData.putString(GameHandler.BUNDLE_GAME, newGame);
 					msg.obj = endData;
 					handler.sendMessage(msg);
 				}

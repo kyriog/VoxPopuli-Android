@@ -3,22 +3,12 @@ package fr.kyriog.android.voxpopuli.handler;
 import java.util.List;
 
 import fr.kyriog.android.voxpopuli.GameActivity;
-import fr.kyriog.android.voxpopuli.HomeActivity;
-import fr.kyriog.android.voxpopuli.R;
-import fr.kyriog.android.voxpopuli.adapter.PlayerAdapter;
 import fr.kyriog.android.voxpopuli.entity.Player;
 import fr.kyriog.android.voxpopuli.entity.Question;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class GameHandler extends Handler {
 	public final static int ACTION_ROOMDATA = 1000;
@@ -44,7 +34,6 @@ public class GameHandler extends Handler {
 	public final static String BUNDLE_GAME = "game";
 
 	private final GameActivity activity;
-	private PlayerAdapter adapter;
 
 	public GameHandler(GameActivity activity) {
 		this.activity = activity;
@@ -90,40 +79,9 @@ public class GameHandler extends Handler {
 			break;
 		case ACTION_ENDGAME:
 			Bundle endData = (Bundle) msg.obj;
-			final Intent intent = new Intent();
-			intent.putExtra(HomeActivity.VP_DATA_GAME, endData.getString(BUNDLE_GAME));
-			activity.setResult(Activity.RESULT_FIRST_USER, intent);
 
 			String[] players = endData.getStringArray(BUNDLE_PLAYERS);
-			Player winner1 = adapter.getPlayerByUsername(players[0]);
-			Player winner2 = adapter.getPlayerByUsername(players[1]);
-
-			activity.setContentView(R.layout.activity_game_ending);
-
-			if(winner1 != null) {
-				ImageView imageWinner1 = (ImageView) activity.findViewById(R.id.game_ending_winner1_image);
-				imageWinner1.setImageBitmap(winner1.getAvatarBitmap());
-
-				TextView usernameWinner1 = (TextView) activity.findViewById(R.id.game_ending_winner1_username);
-				usernameWinner1.setText("@" + winner1.getUsername());
-			}
-
-			if(winner2 != null) {
-				ImageView imageWinner2 = (ImageView) activity.findViewById(R.id.game_ending_winner2_image);
-				imageWinner2.setImageBitmap(winner2.getAvatarBitmap());
-
-				TextView usernameWinner2 = (TextView) activity.findViewById(R.id.game_ending_winner2_username);
-				usernameWinner2.setText("@" + winner2.getUsername());
-			}
-
-			Button newGame = (Button) activity.findViewById(R.id.game_ending_newgame);
-			newGame.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View arg0) {
-					activity.setResult(Activity.RESULT_OK, intent);
-					activity.finish();
-				}
-			});
+			activity.onEndGame(players[0], players[1]);
 			break;
 		}
 	}

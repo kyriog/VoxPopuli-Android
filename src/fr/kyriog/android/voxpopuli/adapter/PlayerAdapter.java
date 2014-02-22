@@ -58,14 +58,4 @@ public class PlayerAdapter extends BaseAdapter {
 
 		return convertView;
 	}
-
-	public Player getPlayerByUsername(String username) {
-		if(username != null) {
-			for(Player player : players) {
-				if(username.equals(player.getUsername()))
-					return player;
-			}
-		}
-		return null;
-	}
 }
