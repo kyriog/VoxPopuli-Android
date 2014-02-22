@@ -64,6 +64,7 @@ public class GameCallback extends BaseCallback {
 					handler.sendMessage(msg);
 				} else if("updateTimer".equals(action)) {
 					int newTimer = (int) Math.floor(rootData.getInt("newValue")/1000);
+					int maxTimer = (int) Math.floor(rootData.getInt("maxValue")/1000);
 					int diff = Math.abs(timer - newTimer);
 					if(diff > 1) {
 						if(timer == -1) {
@@ -72,11 +73,11 @@ public class GameCallback extends BaseCallback {
 						}
 						Log.w("timer", "Timer not synchronized!");
 						timer = newTimer;
-						sendTimerUpdate();
+						sendTimerUpdate(maxTimer);
 					}
 				} else if("removeTimer".equals(action)) {
 					resetTimer();
-					sendTimerUpdate();
+					sendTimerUpdate(-1);
 				} else if("gainLife".equals(action)) {
 					msg.arg1 = GameHandler.ACTION_GAINLIFE;
 					msg.arg2 = rootData.getInt("newPoints");
@@ -158,10 +159,11 @@ public class GameCallback extends BaseCallback {
 		return player;
 	}
 
-	private void sendTimerUpdate() {
+	private void sendTimerUpdate(int maxValue) {
 		Message msg = new Message();
 		msg.arg1 = GameHandler.ACTION_UPDATETIMER;
 		msg.arg2 = timer;
+		msg.obj = maxValue;
 		handler.sendMessage(msg);
 	}
 
@@ -169,7 +171,7 @@ public class GameCallback extends BaseCallback {
 		if(timerThread != null && timerThread.isAlive())
 			timerThread.interrupt();
 		timer = -1;
-		sendTimerUpdate();
+		sendTimerUpdate(-1);
 	}
 
 	private class Timer extends Thread {
@@ -181,7 +183,7 @@ public class GameCallback extends BaseCallback {
 					if(interrupted())
 						return;
 					timer--;
-					sendTimerUpdate();
+					sendTimerUpdate(-1);
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();

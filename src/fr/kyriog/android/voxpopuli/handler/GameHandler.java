@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,25 +84,7 @@ public class GameHandler extends Handler {
 			activity.onRemovePlayer((String) msg.obj);
 			break;
 		case ACTION_UPDATETIMER:
-			ProgressBar progress = (ProgressBar) activity.findViewById(R.id.game_progress);
-			TextView time = (TextView) activity.findViewById(R.id.game_time);
-			if(msg.arg2 == -1) {
-				progress.setVisibility(View.INVISIBLE);
-				time.setVisibility(View.INVISIBLE);
-				progressLaunched = false;
-			} else {
-				if(!progressLaunched) {
-					progress.setVisibility(View.VISIBLE);
-					progress.setMax(msg.arg2);
-				}
-				progress.setProgress(msg.arg2);
-
-				if(!progressLaunched) {
-					time.setVisibility(View.VISIBLE);
-					progressLaunched = true;
-				}
-				time.setText(activity.getResources().getString(R.string.game_waiting_time, msg.arg2));
-			}
+			activity.onUpdateTimer(msg.arg2, (Integer) msg.obj);
 			break;
 		case ACTION_GAINLIFE:
 			if(!gameStarted) {

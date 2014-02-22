@@ -12,8 +12,10 @@ import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class GameActivity extends Activity {
@@ -23,6 +25,8 @@ public class GameActivity extends Activity {
 	private final static int GAMESTATUS_RESULTS = 4;
 	private final static int GAMESTATUS_ENDED = 5;
 	private final static String GAMESTATUS = "gameStatus";
+	private final static String GAMESTATUS_TIMER = "timer";
+	private final static String GAMESTATUS_MAXTIMER = "maxTimer";
 	private final static String GAMESTATUS_WAITING_PLAYERS = "waitingPlayers";
 	private final static String GAMESTATUS_WAITING_NBPLAYERS = "waitingNbPlayers";
 	private final static String GAMESTATUS_WAITING_NBMINPLAYERS = "waitingNbMinPlayers";
@@ -31,12 +35,14 @@ public class GameActivity extends Activity {
 	private static SocketIO socket;
 	private static BaseCallback callback;
 
+	private BaseAdapter adapter;
 	private int gameStatus = 0;
 	private final ArrayList<Player> players = new ArrayList<Player>();
 	private int nbPlayers;
 	private int nbMinPlayers;
 	private int nbMaxPlayers;
-	private BaseAdapter adapter;
+	private int timer = -1;
+	private int maxTimer = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +88,11 @@ public class GameActivity extends Activity {
 			break;
 		}
 
+		if(savedInstanceState != null && savedInstanceState.getInt(GAMESTATUS_TIMER) != -1) {
+			int newTimer = savedInstanceState.getInt(GAMESTATUS_TIMER);
+			int maxTimer = savedInstanceState.getInt(GAMESTATUS_MAXTIMER);
+			onUpdateTimer(newTimer, maxTimer);
+		}
 	}
 
 	@Override
@@ -93,6 +104,9 @@ public class GameActivity extends Activity {
 			outState.putInt(GAMESTATUS_WAITING_NBPLAYERS, nbPlayers);
 			outState.putInt(GAMESTATUS_WAITING_NBMINPLAYERS, nbMinPlayers);
 			outState.putInt(GAMESTATUS_WAITING_NBMAXPLAYERS, nbMaxPlayers);
+
+			outState.putInt(GAMESTATUS_TIMER, timer);
+			outState.putInt(GAMESTATUS_MAXTIMER, maxTimer);
 			break;
 		}
 		super.onSaveInstanceState(outState);
@@ -154,6 +168,28 @@ public class GameActivity extends Activity {
 				updatePlayerCounter();
 				return;
 			}
+		}
+	}
+
+	public void onUpdateTimer(int newTimer, int maxTimer) {
+		timer = newTimer;
+		ProgressBar progress = (ProgressBar) findViewById(R.id.game_progress);
+		TextView time = (TextView) findViewById(R.id.game_time);
+		if(newTimer == -1) {
+			progress.setVisibility(View.INVISIBLE);
+			time.setVisibility(View.INVISIBLE);
+			this.maxTimer = -1;
+		} else {
+			if(maxTimer != -1) {
+				progress.setVisibility(View.VISIBLE);
+				progress.setMax(maxTimer);
+				this.maxTimer = maxTimer;
+
+				time.setVisibility(View.VISIBLE);
+			}
+
+			progress.setProgress(timer);
+			time.setText(getResources().getString(R.string.game_waiting_time, timer));
 		}
 	}
 }
