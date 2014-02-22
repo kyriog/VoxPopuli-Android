@@ -21,6 +21,10 @@
 	<string name="game_ending_congratulation">Félicitations à</string>
 	<string name="game_ending_and">et</string>
 	<string name="game_ending_newgame">Nouvelle partie</string>
+	<string name="game_leave_title">Quitter la partie ?</string>
+	<string name="game_leave_message">Vous ne pourrez plus la rejoindre !</string>
+	<string name="game_leave_ok">OK</string>
+	<string name="game_leave_cancel">Annuler</string>
 	<string name="home_logout">Déconnexion</string>
     
 </resources>

@@ -15,7 +15,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
@@ -64,7 +68,7 @@ public class GameActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		Bundle extras = getIntent().getExtras();
 
 		if(socket == null || !socket.isConnected()) {
@@ -137,6 +141,41 @@ public class GameActivity extends Activity {
 			int newTimer = savedInstanceState.getInt(GAMESTATUS_TIMER);
 			int maxTimer = savedInstanceState.getInt(GAMESTATUS_MAXTIMER);
 			onUpdateTimer(newTimer, maxTimer);
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		doBack();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		case android.R.id.home:
+			doBack();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void doBack() {
+		if(gameStatus == GAMESTATUS_WAITING || gameStatus == GAMESTATUS_ENDED)
+			finish();
+		else {
+			Resources res = getResources();
+			AlertDialog dialog = new AlertDialog.Builder(this).create();
+			dialog.setTitle(R.string.game_leave_title);
+			dialog.setMessage(res.getString(R.string.game_leave_message));
+			dialog.setButton(AlertDialog.BUTTON_NEGATIVE, res.getString(R.string.game_leave_cancel), (DialogInterface.OnClickListener) null);
+			dialog.setButton(AlertDialog.BUTTON_POSITIVE, res.getString(R.string.game_leave_ok), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					finish();
+				}
+			});
+			dialog.show();
 		}
 	}
 
