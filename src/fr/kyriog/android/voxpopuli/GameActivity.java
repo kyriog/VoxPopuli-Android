@@ -377,6 +377,9 @@ public class GameActivity extends Activity {
 
 			TextView usernameWinner2 = (TextView) findViewById(R.id.game_ending_winner2_username);
 			usernameWinner2.setText("@" + player2.getUsername());
+		} else {
+			TextView and = (TextView) findViewById(R.id.game_ending_and);
+			and.setVisibility(View.INVISIBLE);
 		}
 
 		Button newGame = (Button) findViewById(R.id.game_ending_newgame);

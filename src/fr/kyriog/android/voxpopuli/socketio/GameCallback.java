@@ -136,7 +136,11 @@ public class GameCallback extends BaseCallback {
 					msg.arg1 = GameHandler.ACTION_ENDGAME;
 					Bundle endData = new Bundle();
 					JSONArray jsonPlayers = rootData.getJSONArray("winners");
-					String[] players = new String[jsonPlayers.length()];
+					String[] players;
+					if(jsonPlayers.length() > 2)
+						players = new String[jsonPlayers.length()];
+					else
+						players = new String[2];
 					for(int i = 0; i < jsonPlayers.length(); i++) {
 						players[i] = jsonPlayers.getString(i);
 					}
