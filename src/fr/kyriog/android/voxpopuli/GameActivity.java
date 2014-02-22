@@ -202,11 +202,15 @@ public class GameActivity extends Activity {
 		lifecount.setText(String.valueOf(newLife));
 	}
 
-	public void onLooseLife() {
-		onGainLife(lifeCount - 1);
-		String toastMsg = getResources().getString(R.string.game_voting_looselife);
+	public void onLooseLife(int newLife) {
+		String toastMsg;
+		if(lifeCount - newLife == 1)
+			toastMsg = getResources().getString(R.string.game_voting_looselife_one);
+		else
+			toastMsg = getResources().getString(R.string.game_voting_looselife_more, lifeCount - newLife);
 		Toast toast = Toast.makeText(this, toastMsg, Toast.LENGTH_LONG);
 		toast.show();
+		onGainLife(newLife);
 	}
 
 	public void onNewQuestion(Question question) {

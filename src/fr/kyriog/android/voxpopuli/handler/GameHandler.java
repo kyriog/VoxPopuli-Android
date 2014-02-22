@@ -86,7 +86,7 @@ public class GameHandler extends Handler {
 			activity.onShowVotes((Question) msg.obj);
 			break;
 		case ACTION_LOOSELIFE:
-			activity.onLooseLife();
+			activity.onLooseLife(msg.arg2);
 			break;
 		case ACTION_ENDGAME:
 			Bundle endData = (Bundle) msg.obj;
