@@ -7,16 +7,18 @@
     
 	<string name="connecting">Connexion au serveur…</string>
     
-	<string name="home_username">Vous êtes %1$s</string>
-	<string name="home_join">Rejoindre la partie</string>
+	<string name="home_waiting_games">Parties en attente</string>
+	<string name="home_game_players">%1$d/%2$d</string>
     
 	<string name="game_waiting">En attente</string>
 	<string name="game_waiting_time">%1$ds</string>
 	<string name="game_waiting_counter">%1$d/%2$d joueurs (jusqu\'à %3$d)</string>
 	<string name="game_voting_life_description">Vie</string>
-	<string name="game_voting_looselife">Vous perdez une vie.</string>
+	<string name="game_voting_looselife_one">Vous perdez une vie.</string>
+	<string name="game_voting_looselife_more">Vous perdez %1$d vies.</string>
 	<string name="game_ending_congratulation">Félicitations à</string>
 	<string name="game_ending_and">et</string>
 	<string name="game_ending_newgame">Nouvelle partie</string>
+	<string name="home_logout">Déconnexion</string>
     
 </resources>
