@@ -60,6 +60,7 @@ public class GameActivity extends Activity {
 	private int timer = -1;
 	private int maxTimer = -1;
 	private int lifeCount;
+	private AlertDialog deathDialog;
 	private int questionNb = 1;
 	private Question question;
 	private boolean votingDisplayed = false;
@@ -266,11 +267,21 @@ public class GameActivity extends Activity {
 			lifecount.setVisibility(View.VISIBLE);
 
 			dead.setText("💜");
+			if(deathDialog != null && deathDialog.isShowing())
+				deathDialog.cancel();
 		} else {
 			canPlay = false;
 			lifecount.setVisibility(View.INVISIBLE);
 
 			dead.setText("😟");
+
+			if(deathDialog == null || !deathDialog.isShowing()) {
+				deathDialog = new AlertDialog.Builder(this).create();
+				deathDialog.setTitle(R.string.game_voting_death_title);
+				deathDialog.setMessage(getResources().getString(R.string.game_voting_death_message));
+				deathDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.game_voting_death_button), (DialogInterface.OnClickListener) null);
+				deathDialog.show();
+			}
 		}
 	}
 

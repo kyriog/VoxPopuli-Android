@@ -17,6 +17,9 @@
 	<string name="game_voting_life_description">Vie</string>
 	<string name="game_voting_looselife_one">Vous perdez une vie.</string>
 	<string name="game_voting_looselife_more">Vous perdez %1$d vies.</string>
+	<string name="game_voting_death_title">Quel dommage !</string>
+	<string name="game_voting_death_message">Vous n\'avez plus de vie. Vous êtes donc hors-jeu. Mais vous pouvez continuer à regarder la partie !</string>
+	<string name="game_voting_death_button">OK</string>
 	<string name="game_ending_title">Partie terminée</string>
 	<string name="game_ending_congratulation">Félicitations à</string>
 	<string name="game_ending_and">et</string>
