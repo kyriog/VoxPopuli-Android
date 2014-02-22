@@ -64,6 +64,7 @@ public class GameActivity extends Activity {
 	private Question question;
 	private boolean votingDisplayed = false;
 	private final String[] winners = new String[2];
+	private boolean canPlay = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -258,7 +259,19 @@ public class GameActivity extends Activity {
 
 		lifeCount = newLife;
 		TextView lifecount = (TextView) findViewById(R.id.game_voting_lifecount);
-		lifecount.setText(String.valueOf(newLife));
+		TextView dead = (TextView) findViewById(R.id.game_voting_life);
+		if(newLife > 0) {
+			canPlay = true;
+			lifecount.setText(String.valueOf(newLife));
+			lifecount.setVisibility(View.VISIBLE);
+
+			dead.setText("💜");
+		} else {
+			canPlay = false;
+			lifecount.setVisibility(View.INVISIBLE);
+
+			dead.setText("😟");
+		}
 	}
 
 	public void onLooseLife(int newLife) {
@@ -284,17 +297,18 @@ public class GameActivity extends Activity {
 		Button answerA = (Button) findViewById(R.id.game_voting_answer_a);
 		answerA.setText(question.getAnswerA());
 		answerA.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_A));
-		answerA.setEnabled(true);
 
 		Button answerB = (Button) findViewById(R.id.game_voting_answer_b);
 		answerB.setText(question.getAnswerB());
 		answerB.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_B));
-		answerB.setEnabled(true);
 
 		Button answerC = (Button) findViewById(R.id.game_voting_answer_c);
 		answerC.setText(question.getAnswerC());
 		answerC.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_C));
-		answerC.setEnabled(true);
+
+		answerA.setEnabled(canPlay);
+		answerB.setEnabled(canPlay);
+		answerC.setEnabled(canPlay);
 
 		TextView votesInvisibleA = (TextView) findViewById(R.id.game_voting_vote_a);
 		votesInvisibleA.setVisibility(View.INVISIBLE);

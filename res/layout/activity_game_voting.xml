@@ -8,14 +8,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".GameActivity">
 
-    <ImageView
+    <TextView
         android:id="@+id/game_voting_life"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@string/game_voting_life_description"
-        android:src="@drawable/life" />
+        android:layout_alignParentTop="true" />
 
     <TextView
         android:id="@+id/game_voting_lifecount"

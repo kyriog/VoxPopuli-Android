@@ -17,21 +17,19 @@
         android:gravity="right"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
-    <ImageView
+    <TextView
         android:id="@+id/game_voting_life"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignTop="@+id/game_voting_lifecount"
-        android:layout_toRightOf="@+id/game_voting_lifecount"
-        android:contentDescription="@string/game_voting_life_description"
-        android:src="@drawable/life" />
+        android:layout_toRightOf="@+id/game_voting_lifecount" />
 	
     <ProgressBar
         android:id="@+id/game_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/game_voting_life"
+        android:layout_alignTop="@+id/game_voting_life"
         android:layout_toLeftOf="@+id/game_time"
         android:layout_toRightOf="@+id/game_voting_life"
         android:layout_marginLeft="2dp"
