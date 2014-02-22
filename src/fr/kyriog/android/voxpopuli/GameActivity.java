@@ -31,6 +31,7 @@ public class GameActivity extends Activity {
 	private final static String GAMESTATUS_WAITING_NBPLAYERS = "waitingNbPlayers";
 	private final static String GAMESTATUS_WAITING_NBMINPLAYERS = "waitingNbMinPlayers";
 	private final static String GAMESTATUS_WAITING_NBMAXPLAYERS = "waitingNbMaxPlayers";
+	private final static String GAMESTATUS_VOTING_LIFECOUNT = "votingLifeCount";
 
 	private static SocketIO socket;
 	private static BaseCallback callback;
@@ -43,6 +44,7 @@ public class GameActivity extends Activity {
 	private int nbMaxPlayers;
 	private int timer = -1;
 	private int maxTimer = -1;
+	private int lifeCount;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,9 @@ public class GameActivity extends Activity {
 			int nbMaxPlayers = savedInstanceState.getInt(GAMESTATUS_WAITING_NBMAXPLAYERS);
 			onWaiting(players, nbPlayers, nbMinPlayers, nbMaxPlayers);
 			break;
+		case GAMESTATUS_VOTING:
+			int lifeCount = savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT);
+			onGainLife(lifeCount);
 		}
 
 		if(savedInstanceState != null && savedInstanceState.getInt(GAMESTATUS_TIMER) != -1) {
@@ -108,6 +113,8 @@ public class GameActivity extends Activity {
 			outState.putInt(GAMESTATUS_TIMER, timer);
 			outState.putInt(GAMESTATUS_MAXTIMER, maxTimer);
 			break;
+		case GAMESTATUS_VOTING:
+			outState.putInt(GAMESTATUS_VOTING_LIFECOUNT, lifeCount);
 		}
 		super.onSaveInstanceState(outState);
 	}
@@ -149,6 +156,16 @@ public class GameActivity extends Activity {
 		this.nbMinPlayers = nbMinPlayers;
 		this.nbMaxPlayers = nbMaxPlayers;
 		updatePlayerCounter();
+	}
+
+	public void onGainLife(int newLife) {
+		if(gameStatus != GAMESTATUS_VOTING)
+			setContentView(R.layout.activity_game_voting);
+		gameStatus = GAMESTATUS_VOTING;
+
+		lifeCount = newLife;
+		TextView lifecount = (TextView) findViewById(R.id.game_voting_lifecount);
+		lifecount.setText(String.valueOf(newLife));
 	}
 
 	public void onAddPlayer(Player player) {

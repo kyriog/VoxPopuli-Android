@@ -52,9 +52,6 @@ public class GameHandler extends Handler {
 	private final SocketIO socket;
 	private PlayerAdapter adapter;
 
-	private boolean progressLaunched = false;
-	private boolean gameStarted = false;
-
 	public GameHandler(GameActivity activity, SocketIO socket) {
 		this.activity = activity;
 		this.socket = socket;
@@ -87,13 +84,7 @@ public class GameHandler extends Handler {
 			activity.onUpdateTimer(msg.arg2, (Integer) msg.obj);
 			break;
 		case ACTION_GAINLIFE:
-			if(!gameStarted) {
-				activity.setContentView(R.layout.activity_game_voting);
-				progressLaunched = false;
-				gameStarted = true;
-			}
-			TextView lifecount = (TextView) activity.findViewById(R.id.game_voting_lifecount);
-			lifecount.setText(String.valueOf(msg.arg2));
+			activity.onGainLife(msg.arg2);
 			break;
 		case ACTION_NEWQUESTION:
 			Bundle questionData = (Bundle) msg.obj;
