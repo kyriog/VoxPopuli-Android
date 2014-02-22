@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GameActivity extends Activity {
 	private final static int GAMESTATUS_WAITING = 1;
@@ -199,6 +200,13 @@ public class GameActivity extends Activity {
 		lifeCount = newLife;
 		TextView lifecount = (TextView) findViewById(R.id.game_voting_lifecount);
 		lifecount.setText(String.valueOf(newLife));
+	}
+
+	public void onLooseLife() {
+		onGainLife(lifeCount - 1);
+		String toastMsg = getResources().getString(R.string.game_voting_looselife);
+		Toast toast = Toast.makeText(this, toastMsg, Toast.LENGTH_LONG);
+		toast.show();
 	}
 
 	public void onNewQuestion(Question question) {

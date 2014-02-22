@@ -19,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class GameHandler extends Handler {
 	public final static int ACTION_ROOMDATA = 1000;
@@ -87,11 +86,7 @@ public class GameHandler extends Handler {
 			activity.onShowVotes((Question) msg.obj);
 			break;
 		case ACTION_LOOSELIFE:
-			TextView lifecounter = (TextView) activity.findViewById(R.id.game_voting_lifecount);
-			lifecounter.setText(String.valueOf(msg.arg2));
-			String toastMsg = activity.getResources().getString(R.string.game_voting_looselife);
-			Toast toast = Toast.makeText(activity, toastMsg, Toast.LENGTH_SHORT);
-			toast.show();
+			activity.onLooseLife();
 			break;
 		case ACTION_ENDGAME:
 			Bundle endData = (Bundle) msg.obj;
