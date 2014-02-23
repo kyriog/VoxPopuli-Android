@@ -20,6 +20,7 @@ public class GameHandler extends Handler {
 	public final static int ACTION_SHOWVOTES = 1006;
 	public final static int ACTION_LOOSELIFE = 1007;
 	public final static int ACTION_ENDGAME = 1008;
+	public final static int ACTION_HASVOTED = 1009;
 
 	public final static int STATUS_WAITING = 2000;
 
@@ -28,10 +29,7 @@ public class GameHandler extends Handler {
 	public final static String BUNDLE_START_PLAYER_COUNT = "startPlayerCount";
 	public final static String BUNDLE_MAX_PLAYER_COUNT = "maxPlayerCount";
 	public final static String BUNDLE_QUESTION = "question";
-	public final static String BUNDLE_ANSWER_A = "answerA";
-	public final static String BUNDLE_ANSWER_B = "answerB";
-	public final static String BUNDLE_ANSWER_C = "answerC";
-	public final static String BUNDLE_GAME = "game";
+	public final static String BUNDLE_DEADPLAYERS_COUNT = "deadPlayersCount";
 
 	private final GameActivity activity;
 
@@ -71,8 +69,15 @@ public class GameHandler extends Handler {
 		case ACTION_NEWQUESTION:
 			activity.onNewQuestion((Question) msg.obj);
 			break;
+		case ACTION_HASVOTED:
+			activity.increaseVotingPlayers();
+			break;
 		case ACTION_SHOWVOTES:
-			activity.onShowVotes((Question) msg.obj);
+			Bundle data = (Bundle) msg.obj;
+			Question question = data.getParcelable(BUNDLE_QUESTION);
+			int deadCount = data.getInt(BUNDLE_DEADPLAYERS_COUNT);
+			activity.onShowVotes(question);
+			activity.decreaseAlivePlayers(deadCount);
 			break;
 		case ACTION_LOOSELIFE:
 			activity.onLooseLife(msg.arg2);

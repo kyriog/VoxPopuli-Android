@@ -107,8 +107,12 @@ public class GameCallback extends BaseCallback {
 					msg.obj = question;
 					handler.sendMessage(msg);
 					resetTimer();
+				} else if("hasVoted".equals(action)) {
+					msg.arg1 = GameHandler.ACTION_HASVOTED;
+					handler.sendMessage(msg);
 				} else if("showVotes".equals(action)) {
 					msg.arg1 = GameHandler.ACTION_SHOWVOTES;
+					Bundle data = new Bundle();
 					JSONArray votes = rootData.getJSONArray("votes");
 					for(int i = 0; i < 3; i++) {
 						int vote = votes.getInt(i);
@@ -124,7 +128,10 @@ public class GameCallback extends BaseCallback {
 							break;
 						}
 					}
-					msg.obj = question;
+					data.putParcelable(GameHandler.BUNDLE_QUESTION, question);
+					JSONArray deadPlayers = rootData.getJSONArray("deadPlayers");
+					data.putInt(GameHandler.BUNDLE_DEADPLAYERS_COUNT, deadPlayers.length());
+					msg.obj = data;
 					handler.sendMessage(msg);
 					resetTimer();
 				} else if("looseLife".equals(action)) {

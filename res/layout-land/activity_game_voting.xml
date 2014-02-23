@@ -110,5 +110,30 @@
         android:layout_below="@+id/game_voting_vote_c"
         android:layout_marginTop="3dp"
         android:layout_centerHorizontal="true" />
+    
+    <TextView
+        android:id="@+id/game_voting_bottom_middle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+    
+    <TextView
+        android:id="@+id/game_voting_voting_players_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/game_voting_bottom_middle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="30dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+    <TextView
+        android:id="@+id/game_voting_alive_players_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/game_voting_bottom_middle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="30dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
