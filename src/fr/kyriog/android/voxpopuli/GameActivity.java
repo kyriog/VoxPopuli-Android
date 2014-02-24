@@ -48,6 +48,7 @@ public class GameActivity extends Activity {
 	private final static String GAMESTATUS_VOTING_LIFECOUNT = "votingLifeCount";
 	private final static String GAMESTATUS_VOTING_QUESTIONNB = "votingQuestionNb";
 	private final static String GAMESTATUS_VOTING_QUESTION = "votingQuestion";
+	private final static String GAMESTATUS_VOTED_ANSWER = "votedAnswer";
 	private final static String GAMESTATUS_ENDED_WINNERS = "endedWinners";
 
 	private static SocketIO socket;
@@ -66,6 +67,7 @@ public class GameActivity extends Activity {
 	private AlertDialog deathDialog;
 	private int questionNb = 1;
 	private Question question;
+	private int votedAnswer;
 	private int nbVotingPlayers;
 	private boolean votingDisplayed = false;
 	private final String[] winners = new String[2];
@@ -134,7 +136,8 @@ public class GameActivity extends Activity {
 			onNewQuestion(questionVoted);
 			nbVotingPlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT);
 			updateVotingPlayersCount();
-			onVote();
+			votedAnswer = savedInstanceState.getInt(GAMESTATUS_VOTED_ANSWER);
+			onVote(votedAnswer);
 			break;
 		case GAMESTATUS_RESULTS:
 			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
@@ -206,8 +209,9 @@ public class GameActivity extends Activity {
 			outState.putInt(GAMESTATUS_WAITING_NBMINPLAYERS, nbMinPlayers);
 			outState.putInt(GAMESTATUS_WAITING_NBMAXPLAYERS, nbMaxPlayers);
 			break;
-		case GAMESTATUS_VOTING:
 		case GAMESTATUS_VOTED:
+			outState.putInt(GAMESTATUS_VOTED_ANSWER, votedAnswer);
+		case GAMESTATUS_VOTING:
 		case GAMESTATUS_RESULTS:
 			outState.putInt(GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT, nbVotingPlayers);
 			outState.putInt(GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT, nbAlivePlayers);
@@ -322,15 +326,18 @@ public class GameActivity extends Activity {
 		questionView.setText(question.getQuestion());
 
 		Button answerA = (Button) findViewById(R.id.game_voting_answer_a);
-		answerA.setText(question.getAnswerA());
+		answerA.setBackgroundResource(R.drawable.blue_btn);
+		answerA.setText(getResources().getString(R.string.game_voting_answera, question.getAnswerA()));
 		answerA.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_A));
 
 		Button answerB = (Button) findViewById(R.id.game_voting_answer_b);
-		answerB.setText(question.getAnswerB());
+		answerB.setBackgroundResource(R.drawable.red_btn);
+		answerB.setText(getResources().getString(R.string.game_voting_answerb, question.getAnswerB()));
 		answerB.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_B));
 
 		Button answerC = (Button) findViewById(R.id.game_voting_answer_c);
-		answerC.setText(question.getAnswerC());
+		answerC.setBackgroundResource(R.drawable.green_btn);
+		answerC.setText(getResources().getString(R.string.game_voting_answerc, question.getAnswerC()));
 		answerC.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_C));
 
 		answerA.setEnabled(canPlay);
@@ -373,7 +380,7 @@ public class GameActivity extends Activity {
 		alivePlayers.setText(text);
 	}
 
-	public void onVote() {
+	public void onVote(int votingAnswer) {
 		gameStatus = GAMESTATUS_VOTED;
 
 		Button answerA = (Button) findViewById(R.id.game_voting_answer_a);
@@ -382,6 +389,22 @@ public class GameActivity extends Activity {
 		answerB.setEnabled(false);
 		Button answerC = (Button) findViewById(R.id.game_voting_answer_c);
 		answerC.setEnabled(false);
+
+		votedAnswer = votingAnswer;
+		switch(votingAnswer) {
+		case OnAnswerListener.ANSWER_A:
+			answerA.setBackgroundResource(R.drawable.blue_btn_pressed);
+			answerA.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+			break;
+		case OnAnswerListener.ANSWER_B:
+			answerB.setBackgroundResource(R.drawable.red_btn_pressed);
+			answerB.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+			break;
+		case OnAnswerListener.ANSWER_C:
+			answerC.setBackgroundResource(R.drawable.green_btn_pressed);
+			answerC.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+			break;
+		}
 	}
 
 	public void onShowVotes(Question question) {
@@ -504,7 +527,7 @@ public class GameActivity extends Activity {
 				data.put("action", "vote");
 				data.put("voteid", answer);
 				socket.emit("clientEvent", data);
-				onVote();
+				onVote(answer);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
