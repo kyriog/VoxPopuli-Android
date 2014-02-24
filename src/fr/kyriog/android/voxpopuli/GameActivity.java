@@ -46,6 +46,7 @@ public class GameActivity extends Activity {
 	private final static String GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT = "votingVotingPlayersCount";
 	private final static String GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT = "votingAlivePlayersCount";
 	private final static String GAMESTATUS_VOTING_LIFECOUNT = "votingLifeCount";
+	private final static String GAMESTATUS_VOTING_CANPLAY = "votingCanPlay";
 	private final static String GAMESTATUS_VOTING_QUESTIONNB = "votingQuestionNb";
 	private final static String GAMESTATUS_VOTING_QUESTION = "votingQuestion";
 	private final static String GAMESTATUS_VOTED_ANSWER = "votedAnswer";
@@ -118,6 +119,7 @@ public class GameActivity extends Activity {
 			onWaiting(playersClone, nbPlayers, nbMinPlayers, nbMaxPlayers);
 			break;
 		case GAMESTATUS_VOTING:
+			canPlay = savedInstanceState.getBoolean(GAMESTATUS_VOTING_CANPLAY);
 			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
 			nbAlivePlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT);
 			if(savedInstanceState.containsKey(GAMESTATUS_VOTING_QUESTION)) {
@@ -129,6 +131,7 @@ public class GameActivity extends Activity {
 			}
 			break;
 		case GAMESTATUS_VOTED: // Could it be optimized?
+			canPlay = savedInstanceState.getBoolean(GAMESTATUS_VOTING_CANPLAY);
 			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
 			nbAlivePlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT);
 			questionNb = savedInstanceState.getInt(GAMESTATUS_VOTING_QUESTIONNB);
@@ -140,6 +143,7 @@ public class GameActivity extends Activity {
 			onVote(votedAnswer);
 			break;
 		case GAMESTATUS_RESULTS:
+			canPlay = savedInstanceState.getBoolean(GAMESTATUS_VOTING_CANPLAY);
 			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
 			nbAlivePlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT);
 			questionNb = savedInstanceState.getInt(GAMESTATUS_VOTING_QUESTIONNB);
@@ -215,6 +219,7 @@ public class GameActivity extends Activity {
 		case GAMESTATUS_RESULTS:
 			outState.putInt(GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT, nbVotingPlayers);
 			outState.putInt(GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT, nbAlivePlayers);
+			outState.putBoolean(GAMESTATUS_VOTING_CANPLAY, canPlay);
 			outState.putInt(GAMESTATUS_VOTING_LIFECOUNT, lifeCount);
 			outState.putInt(GAMESTATUS_VOTING_QUESTIONNB, questionNb-1);
 			if(question != null)
@@ -282,26 +287,26 @@ public class GameActivity extends Activity {
 		TextView lifecount = (TextView) findViewById(R.id.game_voting_lifecount);
 		TextView dead = (TextView) findViewById(R.id.game_voting_life);
 		if(newLife > 0) {
-			canPlay = true;
 			lifecount.setText(String.valueOf(newLife));
 			lifecount.setVisibility(View.VISIBLE);
 
 			dead.setText("💜");
 			if(deathDialog != null && deathDialog.isShowing())
 				deathDialog.cancel();
+			canPlay = true;
 		} else {
-			canPlay = false;
 			lifecount.setVisibility(View.INVISIBLE);
 
 			dead.setText("😟");
 
-			if(deathDialog == null || !deathDialog.isShowing()) {
+			if(canPlay && (deathDialog == null || !deathDialog.isShowing())) {
 				deathDialog = new AlertDialog.Builder(this).create();
 				deathDialog.setTitle(R.string.game_voting_death_title);
 				deathDialog.setMessage(getResources().getString(R.string.game_voting_death_message));
 				deathDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.game_voting_death_button), (DialogInterface.OnClickListener) null);
 				deathDialog.show();
 			}
+			canPlay = false;
 		}
 	}
 
