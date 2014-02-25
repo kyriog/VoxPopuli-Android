@@ -73,6 +73,13 @@ public class Question implements Parcelable {
 				answerC
 		};
 		dest.writeStringArray(strings);
+
+		int[] results = new int[] {
+				resultA,
+				resultB,
+				resultC
+		};
+		dest.writeIntArray(results);
 	}
 
 	public static final Parcelable.Creator<Question> CREATOR = new Parcelable.Creator<Question>() {
@@ -94,5 +101,11 @@ public class Question implements Parcelable {
 		answerA = strings[1];
 		answerB = strings[2];
 		answerC = strings[3];
+
+		int[] results = new int[3];
+		in.readIntArray(results);
+		resultA = results[0];
+		resultB = results[1];
+		resultC = results[2];
 	}
 }
