@@ -131,7 +131,8 @@ public class GameActivity extends Activity {
 				nbVotingPlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT);
 				updateVotingPlayersCount();
 			}
-			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
+			lifeCount = savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT);
+			updateGainLife();
 			break;
 		case GAMESTATUS_VOTED: // Could it be optimized?
 			gameStarted = true;
@@ -278,16 +279,20 @@ public class GameActivity extends Activity {
 	}
 
 	public void onGainLife(int newLife) {
+		lifeCount = newLife;
+		updateGainLife();
+	}
+
+	private void updateGainLife() {
 		if(!gameStarted) {
 			setContentView(R.layout.activity_game_voting);
 			gameStatus = GAMESTATUS_VOTING;
 		}
 
-		lifeCount = newLife;
 		TextView lifecount = (TextView) findViewById(R.id.game_voting_lifecount);
 		TextView dead = (TextView) findViewById(R.id.game_voting_life);
-		if(newLife > 0) {
-			lifecount.setText(String.valueOf(newLife));
+		if(lifeCount > 0) {
+			lifecount.setText(String.valueOf(lifeCount));
 			lifecount.setVisibility(View.VISIBLE);
 
 			dead.setText("💜");
@@ -370,7 +375,7 @@ public class GameActivity extends Activity {
 		nbVotingPlayers = 0;
 		updateVotingPlayersCount();
 		updateAlivePlayersCount();
-		onGainLife(lifeCount);
+		updateGainLife();
 	}
 
 	public void increaseVotingPlayers() {
@@ -429,7 +434,7 @@ public class GameActivity extends Activity {
 
 		updateAlivePlayersCount();
 		updateVotingPlayersCount();
-		onGainLife(lifeCount);
+		updateGainLife();
 		if(maxTimer != -1)
 			onUpdateTimer(timer, maxTimer);
 	}
