@@ -50,6 +50,7 @@ public class GameActivity extends Activity {
 	private final static String GAMESTATUS_VOTING_QUESTIONNB = "votingQuestionNb";
 	private final static String GAMESTATUS_VOTING_QUESTION = "votingQuestion";
 	private final static String GAMESTATUS_VOTED_ANSWER = "votedAnswer";
+	private final static String GAMESTATUS_RESULTS_MAJORITIES = "resultsMajorities";
 	private final static String GAMESTATUS_ENDED_WINNERS = "endedWinners";
 
 	private static SocketIO socket;
@@ -66,11 +67,12 @@ public class GameActivity extends Activity {
 	private int maxTimer = -1;
 	private int lifeCount;
 	private AlertDialog deathDialog;
+	private boolean gameStarted = false;
 	private int questionNb = 1;
 	private Question question;
 	private int votedAnswer;
 	private int nbVotingPlayers;
-	private boolean votingDisplayed = false;
+	private int[] majorities;
 	private final String[] winners = new String[2];
 	private boolean canPlay = true;
 
@@ -120,38 +122,40 @@ public class GameActivity extends Activity {
 			break;
 		case GAMESTATUS_VOTING:
 			canPlay = savedInstanceState.getBoolean(GAMESTATUS_VOTING_CANPLAY);
-			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
 			nbAlivePlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT);
 			if(savedInstanceState.containsKey(GAMESTATUS_VOTING_QUESTION)) {
+				gameStarted = true;
 				questionNb = savedInstanceState.getInt(GAMESTATUS_VOTING_QUESTIONNB);
 				Question questionVoting = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
 				onNewQuestion(questionVoting);
 				nbVotingPlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT);
 				updateVotingPlayersCount();
 			}
+			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
 			break;
 		case GAMESTATUS_VOTED: // Could it be optimized?
+			gameStarted = true;
 			canPlay = savedInstanceState.getBoolean(GAMESTATUS_VOTING_CANPLAY);
-			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
+			question = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
+			lifeCount = savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT);
 			nbAlivePlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT);
-			questionNb = savedInstanceState.getInt(GAMESTATUS_VOTING_QUESTIONNB);
-			Question questionVoted = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
-			onNewQuestion(questionVoted);
 			nbVotingPlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT);
-			updateVotingPlayersCount();
-			votedAnswer = savedInstanceState.getInt(GAMESTATUS_VOTED_ANSWER);
-			onVote(votedAnswer);
+			onVote(savedInstanceState.getInt(GAMESTATUS_VOTED_ANSWER));
+			questionNb = savedInstanceState.getInt(GAMESTATUS_VOTING_QUESTIONNB);
+			updateTitle();
 			break;
 		case GAMESTATUS_RESULTS:
+			gameStarted = true;
 			canPlay = savedInstanceState.getBoolean(GAMESTATUS_VOTING_CANPLAY);
-			onGainLife(savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT));
+			question = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
+			majorities = savedInstanceState.getIntArray(GAMESTATUS_RESULTS_MAJORITIES);
+			lifeCount = savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT);
 			nbAlivePlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT);
-			questionNb = savedInstanceState.getInt(GAMESTATUS_VOTING_QUESTIONNB);
-			Question questionResults = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
-			onNewQuestion(questionResults);
 			nbVotingPlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT);
-			updateVotingPlayersCount();
-			onShowVotes(questionResults);
+			onVote(savedInstanceState.getInt(GAMESTATUS_VOTED_ANSWER));
+			onShowVotes(question, majorities);
+			questionNb = savedInstanceState.getInt(GAMESTATUS_VOTING_QUESTIONNB);
+			updateTitle();
 			break;
 		case GAMESTATUS_ENDED:
 			String[] winners = savedInstanceState.getStringArray(GAMESTATUS_ENDED_WINNERS);
@@ -213,10 +217,11 @@ public class GameActivity extends Activity {
 			outState.putInt(GAMESTATUS_WAITING_NBMINPLAYERS, nbMinPlayers);
 			outState.putInt(GAMESTATUS_WAITING_NBMAXPLAYERS, nbMaxPlayers);
 			break;
+		case GAMESTATUS_RESULTS:
+			outState.putIntArray(GAMESTATUS_RESULTS_MAJORITIES, majorities);
 		case GAMESTATUS_VOTED:
 			outState.putInt(GAMESTATUS_VOTED_ANSWER, votedAnswer);
 		case GAMESTATUS_VOTING:
-		case GAMESTATUS_RESULTS:
 			outState.putInt(GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT, nbVotingPlayers);
 			outState.putInt(GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT, nbAlivePlayers);
 			outState.putBoolean(GAMESTATUS_VOTING_CANPLAY, canPlay);
@@ -272,16 +277,11 @@ public class GameActivity extends Activity {
 		updatePlayerCounter();
 	}
 
-	private void displayVoteLayout() {
-		if(!votingDisplayed) {
-			setContentView(R.layout.activity_game_voting);
-			votingDisplayed = true;
-		}
-		gameStatus = GAMESTATUS_VOTING;
-	}
-
 	public void onGainLife(int newLife) {
-		displayVoteLayout();
+		if(!gameStarted) {
+			setContentView(R.layout.activity_game_voting);
+			gameStatus = GAMESTATUS_VOTING;
+		}
 
 		lifeCount = newLife;
 		TextView lifecount = (TextView) findViewById(R.id.game_voting_lifecount);
@@ -321,12 +321,21 @@ public class GameActivity extends Activity {
 		onGainLife(newLife);
 	}
 
-	public void onNewQuestion(Question question) {
-		displayVoteLayout();
+	private void updateTitle() {
+		setTitle(getResources().getString(R.string.game_voting_title, questionNb++));
+	}
 
+	public void onNewQuestion(Question question) {
+		if(gameStarted)
+			setContentView(R.layout.activity_game_voting);
+		else
+			gameStarted = true;
+
+		gameStatus = GAMESTATUS_VOTING;
 		this.question = question;
 
-		setTitle(getResources().getString(R.string.game_voting_title, questionNb++));
+		updateTitle();
+
 		TextView questionView = (TextView) findViewById(R.id.game_voting_question);
 		questionView.setText(question.getQuestion());
 
@@ -361,6 +370,7 @@ public class GameActivity extends Activity {
 		nbVotingPlayers = 0;
 		updateVotingPlayersCount();
 		updateAlivePlayersCount();
+		onGainLife(lifeCount);
 	}
 
 	public void increaseVotingPlayers() {
@@ -387,37 +397,52 @@ public class GameActivity extends Activity {
 
 	public void onVote(int votingAnswer) {
 		gameStatus = GAMESTATUS_VOTED;
-
-		Button answerA = (Button) findViewById(R.id.game_voting_answer_a);
-		answerA.setEnabled(false);
-		Button answerB = (Button) findViewById(R.id.game_voting_answer_b);
-		answerB.setEnabled(false);
-		Button answerC = (Button) findViewById(R.id.game_voting_answer_c);
-		answerC.setEnabled(false);
-
 		votedAnswer = votingAnswer;
+		setContentView(R.layout.activity_game_voted);
+
+		TextView questionView = (TextView) findViewById(R.id.game_voting_question);
+		questionView.setText(question.getQuestion());
+
+		TextView answerA = (TextView) findViewById(R.id.game_voting_answer_a);
+		answerA.setText(question.getAnswerA());
+
+		TextView answerB = (TextView) findViewById(R.id.game_voting_answer_b);
+		answerB.setText(question.getAnswerB());
+
+		TextView answerC = (TextView) findViewById(R.id.game_voting_answer_c);
+		answerC.setText(question.getAnswerC());
+
 		switch(votingAnswer) {
 		case OnAnswerListener.ANSWER_A:
-			answerA.setBackgroundResource(R.drawable.blue_btn_pressed);
+			Button btnA = (Button) findViewById(R.id.game_voted_btn_a);
+			btnA.setBackgroundResource(R.drawable.blue_btn_pressed);
 			break;
 		case OnAnswerListener.ANSWER_B:
-			answerB.setBackgroundResource(R.drawable.red_btn_pressed);
+			Button btnB = (Button) findViewById(R.id.game_voted_btn_b);
+			btnB.setBackgroundResource(R.drawable.red_btn_pressed);
 			break;
 		case OnAnswerListener.ANSWER_C:
-			answerC.setBackgroundResource(R.drawable.green_btn_pressed);
+			Button btnC = (Button) findViewById(R.id.game_voted_btn_c);
+			btnC.setBackgroundResource(R.drawable.green_btn_pressed);
 			break;
 		}
+
+		updateAlivePlayersCount();
+		updateVotingPlayersCount();
+		onGainLife(lifeCount);
+		if(maxTimer != -1)
+			onUpdateTimer(timer, maxTimer);
 	}
 
-	public void onShowVotes(Question question) {
+	public void onShowVotes(Question question, int[] majorities) {
+		if(gameStatus == GAMESTATUS_VOTING)
+			onVote(-1);
 		gameStatus = GAMESTATUS_RESULTS;
+		this.majorities = majorities;
 
-		Button answerDisableA = (Button) findViewById(R.id.game_voting_answer_a);
-		answerDisableA.setEnabled(false);
-		Button answerDisableB = (Button) findViewById(R.id.game_voting_answer_b);
-		answerDisableB.setEnabled(false);
-		Button answerDisableC = (Button) findViewById(R.id.game_voting_answer_c);
-		answerDisableC.setEnabled(false);
+		this.question.setResultA(question.getResultA());
+		this.question.setResultB(question.getResultB());
+		this.question.setResultC(question.getResultC());
 
 		TextView votesA = (TextView) findViewById(R.id.game_voting_vote_a);
 		votesA.setText(String.valueOf(question.getResultA()));
@@ -430,6 +455,26 @@ public class GameActivity extends Activity {
 		TextView votesC = (TextView) findViewById(R.id.game_voting_vote_c);
 		votesC.setText(String.valueOf(question.getResultC()));
 		votesC.setVisibility(View.VISIBLE);
+
+		for(int i : majorities) {
+			switch(i) {
+			case OnAnswerListener.ANSWER_A:
+				TextView majorityA = (TextView) findViewById(R.id.game_voted_best_a);
+				majorityA.setText("👑");
+				break;
+			case OnAnswerListener.ANSWER_B:
+				TextView majorityB = (TextView) findViewById(R.id.game_voted_best_b);
+				majorityB.setText("👑");
+				break;
+			case OnAnswerListener.ANSWER_C:
+				TextView majorityC = (TextView) findViewById(R.id.game_voted_best_c);
+				majorityC.setText("👑");
+				break;
+			}
+		}
+
+		updateAlivePlayersCount();
+		updateVotingPlayersCount();
 	}
 
 	public void onEndGame(String winner1, String winner2) {

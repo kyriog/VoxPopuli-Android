@@ -131,6 +131,12 @@ public class GameCallback extends BaseCallback {
 					data.putParcelable(GameHandler.BUNDLE_QUESTION, question);
 					JSONArray deadPlayers = rootData.getJSONArray("deadPlayers");
 					data.putInt(GameHandler.BUNDLE_DEADPLAYERS_COUNT, deadPlayers.length());
+					JSONArray jsonMajorities = rootData.getJSONArray("majs");
+					int[] majorities = new int[jsonMajorities.length()];
+					for(int i = 0; i < jsonMajorities.length(); i++) {
+						majorities[i] = jsonMajorities.getInt(i);
+					}
+					data.putIntArray(GameHandler.BUNDLE_MAJORITIES, majorities);
 					msg.obj = data;
 					handler.sendMessage(msg);
 					resetTimer();
