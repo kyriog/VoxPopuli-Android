@@ -399,15 +399,12 @@ public class GameActivity extends Activity {
 		switch(votingAnswer) {
 		case OnAnswerListener.ANSWER_A:
 			answerA.setBackgroundResource(R.drawable.blue_btn_pressed);
-			answerA.setTextColor(getResources().getColor(android.R.color.primary_text_light));
 			break;
 		case OnAnswerListener.ANSWER_B:
 			answerB.setBackgroundResource(R.drawable.red_btn_pressed);
-			answerB.setTextColor(getResources().getColor(android.R.color.primary_text_light));
 			break;
 		case OnAnswerListener.ANSWER_C:
 			answerC.setBackgroundResource(R.drawable.green_btn_pressed);
-			answerC.setTextColor(getResources().getColor(android.R.color.primary_text_light));
 			break;
 		}
 	}
