@@ -123,16 +123,15 @@ public class GameActivity extends Activity {
 		case GAMESTATUS_VOTING:
 			canPlay = savedInstanceState.getBoolean(GAMESTATUS_VOTING_CANPLAY);
 			nbAlivePlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT);
+			lifeCount = savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT);
 			if(savedInstanceState.containsKey(GAMESTATUS_VOTING_QUESTION)) {
 				gameStarted = true;
 				questionNb = savedInstanceState.getInt(GAMESTATUS_VOTING_QUESTIONNB);
-				Question questionVoting = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
-				onNewQuestion(questionVoting);
+				question = savedInstanceState.getParcelable(GAMESTATUS_VOTING_QUESTION);
 				nbVotingPlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT);
-				updateVotingPlayersCount();
-			}
-			lifeCount = savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT);
-			updateGainLife();
+				updateNewQuestion();
+			} else
+				updateGainLife();
 			break;
 		case GAMESTATUS_VOTED: // Could it be optimized?
 			gameStarted = true;
@@ -331,13 +330,17 @@ public class GameActivity extends Activity {
 	}
 
 	public void onNewQuestion(Question question) {
+		gameStatus = GAMESTATUS_VOTING;
+		this.question = question;
+		nbVotingPlayers = 0;
+		updateNewQuestion();
+	}
+
+	private void updateNewQuestion() {
 		if(gameStarted)
 			setContentView(R.layout.activity_game_voting);
 		else
 			gameStarted = true;
-
-		gameStatus = GAMESTATUS_VOTING;
-		this.question = question;
 
 		updateTitle();
 
@@ -372,7 +375,6 @@ public class GameActivity extends Activity {
 		TextView votesInvisibleC = (TextView) findViewById(R.id.game_voting_vote_c);
 		votesInvisibleC.setVisibility(View.INVISIBLE);
 
-		nbVotingPlayers = 0;
 		updateVotingPlayersCount();
 		updateAlivePlayersCount();
 		updateGainLife();
