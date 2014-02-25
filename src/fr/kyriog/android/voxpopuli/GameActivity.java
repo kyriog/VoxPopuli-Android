@@ -280,16 +280,15 @@ public class GameActivity extends Activity {
 	}
 
 	public void onGainLife(int newLife) {
+		if(!gameStarted) {
+			setContentView(R.layout.activity_game_voting);
+			gameStatus = GAMESTATUS_VOTING;
+		}
 		lifeCount = newLife;
 		updateGainLife();
 	}
 
 	private void updateGainLife() {
-		if(!gameStarted) {
-			setContentView(R.layout.activity_game_voting);
-			gameStatus = GAMESTATUS_VOTING;
-		}
-
 		TextView lifecount = (TextView) findViewById(R.id.game_voting_lifecount);
 		TextView dead = (TextView) findViewById(R.id.game_voting_life);
 		if(lifeCount > 0) {
