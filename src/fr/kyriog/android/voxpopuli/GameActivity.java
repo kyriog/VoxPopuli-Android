@@ -140,7 +140,8 @@ public class GameActivity extends Activity {
 			lifeCount = savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT);
 			nbAlivePlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT);
 			nbVotingPlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT);
-			onVote(savedInstanceState.getInt(GAMESTATUS_VOTED_ANSWER));
+			votedAnswer = savedInstanceState.getInt(GAMESTATUS_VOTED_ANSWER);
+			updateVote();
 			questionNb = savedInstanceState.getInt(GAMESTATUS_VOTING_QUESTIONNB);
 			updateTitle();
 			break;
@@ -152,7 +153,8 @@ public class GameActivity extends Activity {
 			lifeCount = savedInstanceState.getInt(GAMESTATUS_VOTING_LIFECOUNT);
 			nbAlivePlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_ALIVEPLAYERS_COUNT);
 			nbVotingPlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT);
-			onVote(savedInstanceState.getInt(GAMESTATUS_VOTED_ANSWER));
+			votedAnswer = savedInstanceState.getInt(GAMESTATUS_VOTED_ANSWER);
+			updateVote();
 			onShowVotes(question, majorities);
 			questionNb = savedInstanceState.getInt(GAMESTATUS_VOTING_QUESTIONNB);
 			updateTitle();
@@ -405,6 +407,10 @@ public class GameActivity extends Activity {
 	public void onVote(int votingAnswer) {
 		gameStatus = GAMESTATUS_VOTED;
 		votedAnswer = votingAnswer;
+		updateVote();
+	}
+
+	private void updateVote() {
 		setContentView(R.layout.activity_game_voted);
 
 		TextView questionView = (TextView) findViewById(R.id.game_voting_question);
@@ -419,7 +425,7 @@ public class GameActivity extends Activity {
 		TextView answerC = (TextView) findViewById(R.id.game_voting_answer_c);
 		answerC.setText(question.getAnswerC());
 
-		switch(votingAnswer) {
+		switch(votedAnswer) {
 		case OnAnswerListener.ANSWER_A:
 			Button btnA = (Button) findViewById(R.id.game_voted_btn_a);
 			btnA.setBackgroundResource(R.drawable.blue_btn_pressed);
