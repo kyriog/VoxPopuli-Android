@@ -155,7 +155,7 @@ public class GameActivity extends Activity {
 			nbVotingPlayers = savedInstanceState.getInt(GAMESTATUS_VOTING_VOTINGPLAYERS_COUNT);
 			votedAnswer = savedInstanceState.getInt(GAMESTATUS_VOTED_ANSWER);
 			updateVote();
-			onShowVotes(question, majorities);
+			updateShowVotes();
 			questionNb = savedInstanceState.getInt(GAMESTATUS_VOTING_QUESTIONNB);
 			updateTitle();
 			break;
@@ -452,7 +452,10 @@ public class GameActivity extends Activity {
 			onVote(-1);
 		gameStatus = GAMESTATUS_RESULTS;
 		this.majorities = majorities;
+		updateShowVotes();
+	}
 
+	private void updateShowVotes() {
 		this.question.setResultA(question.getResultA());
 		this.question.setResultB(question.getResultB());
 		this.question.setResultC(question.getResultC());
