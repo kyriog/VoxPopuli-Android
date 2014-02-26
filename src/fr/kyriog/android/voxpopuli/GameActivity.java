@@ -32,6 +32,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class GameActivity extends Activity {
+	public final static int ANSWER_A = 0;
+	public final static int ANSWER_B = 1;
+	public final static int ANSWER_C = 2;
+
 	private final static int GAMESTATUS_WAITING = 1;
 	private final static int GAMESTATUS_VOTING = 2;
 	private final static int GAMESTATUS_VOTED = 3;
@@ -353,17 +357,17 @@ public class GameActivity extends Activity {
 		Button answerA = (Button) findViewById(R.id.game_voting_answer_a);
 		answerA.setBackgroundResource(R.drawable.blue_btn);
 		answerA.setText(getResources().getString(R.string.game_voting_answera, question.getAnswerA()));
-		answerA.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_A));
+		answerA.setOnClickListener(new OnAnswerListener(ANSWER_A));
 
 		Button answerB = (Button) findViewById(R.id.game_voting_answer_b);
 		answerB.setBackgroundResource(R.drawable.red_btn);
 		answerB.setText(getResources().getString(R.string.game_voting_answerb, question.getAnswerB()));
-		answerB.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_B));
+		answerB.setOnClickListener(new OnAnswerListener(ANSWER_B));
 
 		Button answerC = (Button) findViewById(R.id.game_voting_answer_c);
 		answerC.setBackgroundResource(R.drawable.green_btn);
 		answerC.setText(getResources().getString(R.string.game_voting_answerc, question.getAnswerC()));
-		answerC.setOnClickListener(new OnAnswerListener(OnAnswerListener.ANSWER_C));
+		answerC.setOnClickListener(new OnAnswerListener(ANSWER_C));
 
 		answerA.setEnabled(canPlay);
 		answerB.setEnabled(canPlay);
@@ -424,15 +428,15 @@ public class GameActivity extends Activity {
 		answerC.setText(question.getAnswerC());
 
 		switch(votedAnswer) {
-		case OnAnswerListener.ANSWER_A:
+		case ANSWER_A:
 			Button btnA = (Button) findViewById(R.id.game_voted_btn_a);
 			btnA.setBackgroundResource(R.drawable.blue_btn_pressed);
 			break;
-		case OnAnswerListener.ANSWER_B:
+		case ANSWER_B:
 			Button btnB = (Button) findViewById(R.id.game_voted_btn_b);
 			btnB.setBackgroundResource(R.drawable.red_btn_pressed);
 			break;
-		case OnAnswerListener.ANSWER_C:
+		case ANSWER_C:
 			Button btnC = (Button) findViewById(R.id.game_voted_btn_c);
 			btnC.setBackgroundResource(R.drawable.green_btn_pressed);
 			break;
@@ -476,15 +480,15 @@ public class GameActivity extends Activity {
 
 		for(int i : majorities) {
 			switch(i) {
-			case OnAnswerListener.ANSWER_A:
+			case ANSWER_A:
 				TextView majorityA = (TextView) findViewById(R.id.game_voted_best_a);
 				majorityA.setText("👑");
 				break;
-			case OnAnswerListener.ANSWER_B:
+			case ANSWER_B:
 				TextView majorityB = (TextView) findViewById(R.id.game_voted_best_b);
 				majorityB.setText("👑");
 				break;
-			case OnAnswerListener.ANSWER_C:
+			case ANSWER_C:
 				TextView majorityC = (TextView) findViewById(R.id.game_voted_best_c);
 				majorityC.setText("👑");
 				break;
@@ -575,10 +579,6 @@ public class GameActivity extends Activity {
 	}
 
 	private class OnAnswerListener implements OnClickListener {
-		public final static int ANSWER_A = 0;
-		public final static int ANSWER_B = 1;
-		public final static int ANSWER_C = 2;
-
 		private final int answer;
 
 		public OnAnswerListener(int answer) {
