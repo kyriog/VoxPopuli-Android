@@ -191,6 +191,16 @@
         
     </RelativeLayout>
     
+    <GridView 
+        android:id="@+id/game_voted_players"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/game_voted_layout_a"
+        android:layout_above="@+id/game_voting_voting_players_count"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:numColumns="2" />
+    
     <TextView
         android:id="@+id/game_voted_bottom_middle"
         android:layout_width="0dp"

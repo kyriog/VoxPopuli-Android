@@ -430,6 +430,10 @@ public class GameActivity extends Activity {
 			break;
 		}
 
+		GridView playersView = (GridView) findViewById(R.id.game_voted_players);
+		PlayerAdapter adapter = new PlayerAdapter(this, players);
+		playersView.setAdapter(adapter);
+
 		updateAlivePlayersCount();
 		updateVotingPlayersCount();
 		updateGainLife();
