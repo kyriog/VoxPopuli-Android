@@ -396,8 +396,13 @@ public class GameActivity extends Activity {
 		votingPlayers.setText(text);
 	}
 
-	public void decreaseAlivePlayers(int deadPlayersCount) {
-		nbAlivePlayers -= deadPlayersCount;
+	public void decreaseAlivePlayers(String[] deadPlayers) {
+		for(String deadPlayer : deadPlayers) {
+			Player player = Player.getPlayerById(players, deadPlayer);
+			if(player != null)
+				player.setDead(true);
+		}
+		nbAlivePlayers -= deadPlayers.length;
 		updateAlivePlayersCount();
 	}
 

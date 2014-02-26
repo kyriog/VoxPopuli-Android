@@ -29,7 +29,7 @@ public class GameHandler extends Handler {
 	public final static String BUNDLE_START_PLAYER_COUNT = "startPlayerCount";
 	public final static String BUNDLE_MAX_PLAYER_COUNT = "maxPlayerCount";
 	public final static String BUNDLE_QUESTION = "question";
-	public final static String BUNDLE_DEADPLAYERS_COUNT = "deadPlayersCount";
+	public final static String BUNDLE_DEADPLAYERS = "deadPlayers";
 	public final static String BUNDLE_MAJORITIES = "majorities";
 
 	private final GameActivity activity;
@@ -77,10 +77,10 @@ public class GameHandler extends Handler {
 			Bundle data = (Bundle) msg.obj;
 			Question question = data.getParcelable(BUNDLE_QUESTION);
 			List<Player> playersVotes = data.getParcelableArrayList(BUNDLE_PLAYERS);
-			int deadCount = data.getInt(BUNDLE_DEADPLAYERS_COUNT);
+			String[] deadPlayers = data.getStringArray(BUNDLE_DEADPLAYERS);
 			int[] majorities = data.getIntArray(BUNDLE_MAJORITIES);
 			activity.onShowVotes(question, majorities, playersVotes);
-			activity.decreaseAlivePlayers(deadCount);
+			activity.decreaseAlivePlayers(deadPlayers);
 			break;
 		case ACTION_LOOSELIFE:
 			activity.onLooseLife(msg.arg2);

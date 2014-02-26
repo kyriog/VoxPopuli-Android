@@ -13,6 +13,7 @@ public class Player implements Parcelable {
 	private String username;
 	private int vote = -1;
 	private boolean hasVoted = false;
+	private boolean isDead = false;
 
 	public Player(String id) {
 		this.id = id;
@@ -66,6 +67,14 @@ public class Player implements Parcelable {
 		this.hasVoted = hasVoted;
 	}
 
+	public boolean isDead() {
+		return isDead;
+	}
+
+	public void setDead(boolean isDead) {
+		this.isDead = isDead;
+	}
+
 	public static void resetVotes(List<Player> players) {
 		for(Player player : players) {
 			player.setVoted(false);
@@ -109,7 +118,8 @@ public class Player implements Parcelable {
 		};
 		dest.writeStringArray(data);
 		boolean[] booleans = new boolean[] {
-				hasVoted
+				hasVoted,
+				isDead
 		};
 		dest.writeBooleanArray(booleans);
 	}
@@ -134,8 +144,9 @@ public class Player implements Parcelable {
 		id = data[0];
 		avatarUrl = data[1];
 		username = data[2];
-		boolean[] booleans = new boolean[1];
+		boolean[] booleans = new boolean[2];
 		in.readBooleanArray(booleans);
 		hasVoted = booleans[0];
+		isDead = booleans[1];
 	}
 }

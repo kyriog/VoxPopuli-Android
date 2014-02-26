@@ -3,6 +3,7 @@ package fr.kyriog.android.voxpopuli.adapter;
 import java.util.List;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,12 +21,17 @@ public class VotedPlayerAdapter extends PlayerAdapter {
 		convertView = super.getView(position, convertView, parent);
 		Player player = getItem(position);
 
-		float alpha = (float) 0.5;
-		if(player.hasVoted())
-			alpha = 1;
-
 		ImageView avatar = (ImageView) convertView.findViewById(R.id.game_waiting_player_image);
 		TextView username = (TextView) convertView.findViewById(R.id.game_waiting_player_username);
+
+		float alpha = (float) 0.5;
+		if(player.hasVoted()) {
+			alpha = 1;
+			if(player.isDead())
+				username.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+		} else if(player.isDead())
+			alpha = (float) 0.1;
+
 		avatar.setAlpha(alpha);
 		username.setAlpha(alpha);
 
