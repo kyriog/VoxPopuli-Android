@@ -11,6 +11,7 @@ public class Player implements Parcelable {
 	private String avatarUrl;
 	private Bitmap avatarBitmap;
 	private String username;
+	private boolean hasVoted = false;
 
 	public Player(String id) {
 		this.id = id;
@@ -48,6 +49,30 @@ public class Player implements Parcelable {
 		this.username = username;
 	}
 
+	public boolean hasVoted() {
+		return hasVoted;
+	}
+
+	public void setVoted(boolean hasVoted) {
+		this.hasVoted = hasVoted;
+	}
+
+	public static void resetVotes(List<Player> players) {
+		for(Player player : players) {
+			player.setVoted(false);
+		}
+	}
+
+	public static Player getPlayerById(List<Player> players, String id) {
+		if(id != null) {
+			for(Player player : players) {
+				if(id.equals(player.getId()))
+					return player;
+			}
+		}
+		return null;
+	}
+
 	public static Player getPlayerByUsername(List<Player> players, String username) {
 		if(username != null) {
 			for(Player player : players) {
@@ -72,6 +97,10 @@ public class Player implements Parcelable {
 				username
 		};
 		dest.writeStringArray(data);
+		boolean[] booleans = new boolean[] {
+				hasVoted
+		};
+		dest.writeBooleanArray(booleans);
 	}
 
 	public static final Parcelable.Creator<Player> CREATOR = new Parcelable.Creator<Player>() {
@@ -93,5 +122,8 @@ public class Player implements Parcelable {
 		id = data[0];
 		avatarUrl = data[1];
 		username = data[2];
+		boolean[] booleans = new boolean[1];
+		in.readBooleanArray(booleans);
+		hasVoted = booleans[0];
 	}
 }

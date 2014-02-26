@@ -1,6 +1,7 @@
 package fr.kyriog.android.voxpopuli;
 
 import fr.kyriog.android.voxpopuli.adapter.PlayerAdapter;
+import fr.kyriog.android.voxpopuli.adapter.VotedPlayerAdapter;
 import fr.kyriog.android.voxpopuli.entity.Player;
 import fr.kyriog.android.voxpopuli.entity.Question;
 import fr.kyriog.android.voxpopuli.handler.GameHandler;
@@ -333,6 +334,7 @@ public class GameActivity extends Activity {
 	public void onNewQuestion(Question question) {
 		gameStatus = GAMESTATUS_VOTING;
 		this.question = question;
+		Player.resetVotes(players);
 		nbVotingPlayers = 0;
 		updateNewQuestion();
 	}
@@ -372,7 +374,13 @@ public class GameActivity extends Activity {
 		updateGainLife();
 	}
 
-	public void increaseVotingPlayers() {
+	public void increaseVotingPlayers(String voter) {
+		Player player = Player.getPlayerById(players, voter);
+		if(player != null) {
+			player.setVoted(true);
+			if(gameStatus == GAMESTATUS_VOTED)
+				adapter.notifyDataSetChanged();
+		}
 		nbVotingPlayers++;
 		updateVotingPlayersCount();
 	}
@@ -431,7 +439,7 @@ public class GameActivity extends Activity {
 		}
 
 		GridView playersView = (GridView) findViewById(R.id.game_voted_players);
-		PlayerAdapter adapter = new PlayerAdapter(this, players);
+		adapter = new VotedPlayerAdapter(this, players);
 		playersView.setAdapter(adapter);
 
 		updateAlivePlayersCount();

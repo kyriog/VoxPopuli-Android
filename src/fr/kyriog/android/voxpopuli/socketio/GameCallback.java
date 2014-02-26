@@ -109,6 +109,8 @@ public class GameCallback extends BaseCallback {
 					resetTimer();
 				} else if("hasVoted".equals(action)) {
 					msg.arg1 = GameHandler.ACTION_HASVOTED;
+					String voter = rootData.getString("player");
+					msg.obj = voter;
 					handler.sendMessage(msg);
 				} else if("showVotes".equals(action)) {
 					msg.arg1 = GameHandler.ACTION_SHOWVOTES;

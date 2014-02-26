@@ -71,7 +71,7 @@ public class GameHandler extends Handler {
 			activity.onNewQuestion((Question) msg.obj);
 			break;
 		case ACTION_HASVOTED:
-			activity.increaseVotingPlayers();
+			activity.increaseVotingPlayers((String) msg.obj);
 			break;
 		case ACTION_SHOWVOTES:
 			Bundle data = (Bundle) msg.obj;
