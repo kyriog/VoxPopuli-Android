@@ -50,154 +50,162 @@
         android:layout_centerHorizontal="true"
         android:gravity="center" />
     
-    <!-- Button B -->
-    
-    <RelativeLayout
-        android:id="@+id/game_voted_layout_b"
-        android:layout_width="120dp"
+    <LinearLayout
+        android:id="@+id/game_voted_answers_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/game_voting_question"
-        android:layout_centerHorizontal="true">
-	    
-	    <Button
-	        android:id="@+id/game_voted_btn_b"
-	        android:layout_width="40dp"
-	        android:layout_height="40dp"
-	        android:layout_centerHorizontal="true"
-	        android:layout_marginTop="32dp"
-	        android:background="@drawable/red_btn"
-	        android:enabled="false"
-	        android:text="B"
-	        android:textColor="@android:color/primary_text_light"
-	        tools:ignore="HardcodedText" />
-	    
-	    <TextView
-	        android:id="@+id/game_voted_best_b"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_centerHorizontal="true"
-	        android:textSize="35dp"
-	        tools:ignore="SpUsage" />
-	    
-	    <TextView
-	        android:id="@+id/game_voting_vote_b"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_toRightOf="@+id/game_voted_btn_b"
-	        android:layout_alignBaseline="@+id/game_voted_btn_b"
-	        android:layout_marginLeft="2dp" />
-	    
-	    <TextView
-	        android:id="@+id/game_voting_answer_b"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/game_voted_btn_b"
-	        android:layout_centerHorizontal="true"
-	        android:gravity="center" />
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:baselineAligned="false">
         
-    </RelativeLayout>
-    
-    <!-- Button A -->
-    
-    <RelativeLayout
-        android:id="@+id/game_voted_layout_a"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/game_voting_question"
-        android:layout_toLeftOf="@+id/game_voted_layout_b">
+        <!-- Button A -->
 	    
-	    <Button
-	        android:id="@+id/game_voted_btn_a"
-	        android:layout_width="40dp"
-	        android:layout_height="40dp"
-	        android:layout_centerHorizontal="true"
-	        android:layout_marginTop="32dp"
-	        android:background="@drawable/blue_btn"
-	        android:enabled="false"
-	        android:text="A"
-	        android:textColor="@android:color/primary_text_light"
-	        tools:ignore="HardcodedText" />
-	    
-	    <TextView
-	        android:id="@+id/game_voted_best_a"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_centerHorizontal="true"
-	        android:textSize="35dp"
-	        tools:ignore="SpUsage" />
-	    
-	    <TextView
-	        android:id="@+id/game_voting_vote_a"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_toRightOf="@+id/game_voted_btn_a"
-	        android:layout_alignBaseline="@+id/game_voted_btn_a"
-	        android:layout_marginLeft="2dp" />
-	    
-	    <TextView
-	        android:id="@+id/game_voting_answer_a"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/game_voted_btn_a"
-	        android:layout_centerHorizontal="true"
-	        android:gravity="center" />
+	    <RelativeLayout
+	        android:id="@+id/game_voted_layout_a"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1">
+		    
+		    <Button
+		        android:id="@+id/game_voted_btn_a"
+		        android:layout_width="40dp"
+		        android:layout_height="40dp"
+		        android:layout_centerHorizontal="true"
+		        android:layout_marginTop="32dp"
+		        android:background="@drawable/blue_btn"
+		        android:enabled="false"
+		        android:text="A"
+		        android:textColor="@android:color/primary_text_light"
+		        tools:ignore="HardcodedText" />
+		    
+		    <TextView
+		        android:id="@+id/game_voted_best_a"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_centerHorizontal="true"
+		        android:textSize="35dp"
+		        tools:ignore="SpUsage" />
+		    
+		    <TextView
+		        android:id="@+id/game_voting_vote_a"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_toRightOf="@+id/game_voted_btn_a"
+		        android:layout_alignBaseline="@+id/game_voted_btn_a"
+		        android:layout_marginLeft="2dp" />
+		    
+		    <TextView
+		        android:id="@+id/game_voting_answer_a"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_below="@+id/game_voted_btn_a"
+		        android:layout_centerHorizontal="true"
+		        android:gravity="center" />
+	        
+	    </RelativeLayout>
         
-    </RelativeLayout>
+        <!-- Button B -->
     
-    <!-- Button C -->
-    
-    <RelativeLayout
-        android:id="@+id/game_voted_layout_c"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/game_voting_question"
-        android:layout_toRightOf="@+id/game_voted_layout_b">
+	    <RelativeLayout
+	        android:id="@+id/game_voted_layout_b"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1">
+		    
+		    <Button
+		        android:id="@+id/game_voted_btn_b"
+		        android:layout_width="40dp"
+		        android:layout_height="40dp"
+		        android:layout_centerHorizontal="true"
+		        android:layout_marginTop="32dp"
+		        android:background="@drawable/red_btn"
+		        android:enabled="false"
+		        android:text="B"
+		        android:textColor="@android:color/primary_text_light"
+		        tools:ignore="HardcodedText" />
+		    
+		    <TextView
+		        android:id="@+id/game_voted_best_b"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_centerHorizontal="true"
+		        android:textSize="35dp"
+		        tools:ignore="SpUsage" />
+		    
+		    <TextView
+		        android:id="@+id/game_voting_vote_b"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_toRightOf="@+id/game_voted_btn_b"
+		        android:layout_alignBaseline="@+id/game_voted_btn_b"
+		        android:layout_marginLeft="2dp" />
+		    
+		    <TextView
+		        android:id="@+id/game_voting_answer_b"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_below="@+id/game_voted_btn_b"
+		        android:layout_centerHorizontal="true"
+		        android:gravity="center" />
+	        
+	    </RelativeLayout>
 	    
-	    <Button
-	        android:id="@+id/game_voted_btn_c"
-	        android:layout_width="40dp"
-	        android:layout_height="40dp"
-	        android:layout_centerHorizontal="true"
-	        android:layout_marginTop="32dp"
-	        android:background="@drawable/green_btn"
-	        android:enabled="false"
-	        android:text="C"
-	        android:textColor="@android:color/primary_text_light"
-	        tools:ignore="HardcodedText" />
+	    <!-- Button C -->
 	    
-	    <TextView
-	        android:id="@+id/game_voted_best_c"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_centerHorizontal="true"
-	        android:textSize="35dp"
-	        tools:ignore="SpUsage" />
-	    
-	    <TextView
-	        android:id="@+id/game_voting_vote_c"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_toRightOf="@+id/game_voted_btn_c"
-	        android:layout_alignBaseline="@+id/game_voted_btn_c"
-	        android:layout_marginLeft="2dp" />
-	    
-	    <TextView
-	        android:id="@+id/game_voting_answer_c"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/game_voted_btn_c"
-	        android:layout_centerHorizontal="true"
-	        android:gravity="center" />
+	    <RelativeLayout
+	        android:id="@+id/game_voted_layout_c"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1">
+		    
+		    <Button
+		        android:id="@+id/game_voted_btn_c"
+		        android:layout_width="40dp"
+		        android:layout_height="40dp"
+		        android:layout_centerHorizontal="true"
+		        android:layout_marginTop="32dp"
+		        android:background="@drawable/green_btn"
+		        android:enabled="false"
+		        android:text="C"
+		        android:textColor="@android:color/primary_text_light"
+		        tools:ignore="HardcodedText" />
+		    
+		    <TextView
+		        android:id="@+id/game_voted_best_c"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_centerHorizontal="true"
+		        android:textSize="35dp"
+		        tools:ignore="SpUsage" />
+		    
+		    <TextView
+		        android:id="@+id/game_voting_vote_c"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_toRightOf="@+id/game_voted_btn_c"
+		        android:layout_alignBaseline="@+id/game_voted_btn_c"
+		        android:layout_marginLeft="2dp" />
+		    
+		    <TextView
+		        android:id="@+id/game_voting_answer_c"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_below="@+id/game_voted_btn_c"
+		        android:layout_centerHorizontal="true"
+		        android:gravity="center" />
+	        
+	    </RelativeLayout>
         
-    </RelativeLayout>
+    </LinearLayout>
     
     <GridView 
         android:id="@+id/game_voted_players"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/game_voting_question"
+        android:layout_below="@+id/game_voted_answers_layout"
         android:layout_above="@+id/game_voting_voting_players_count"
-        android:layout_marginTop="110dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:numColumns="2"
         android:verticalSpacing="2dp"
