@@ -76,9 +76,10 @@ public class GameHandler extends Handler {
 		case ACTION_SHOWVOTES:
 			Bundle data = (Bundle) msg.obj;
 			Question question = data.getParcelable(BUNDLE_QUESTION);
+			List<Player> playersVotes = data.getParcelableArrayList(BUNDLE_PLAYERS);
 			int deadCount = data.getInt(BUNDLE_DEADPLAYERS_COUNT);
 			int[] majorities = data.getIntArray(BUNDLE_MAJORITIES);
-			activity.onShowVotes(question, majorities);
+			activity.onShowVotes(question, majorities, playersVotes);
 			activity.decreaseAlivePlayers(deadCount);
 			break;
 		case ACTION_LOOSELIFE:

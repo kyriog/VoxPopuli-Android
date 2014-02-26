@@ -42,9 +42,8 @@
         android:layout_above="@+id/game_waiting_counter"
         android:layout_alignLeft="@+id/game_progress"
         android:layout_below="@id/game_time"
-        android:numColumns="2" >
-
-    </GridView>
+        android:numColumns="2"
+        android:verticalSpacing="2dp" />
 
     <TextView
         android:id="@+id/game_waiting_counter"

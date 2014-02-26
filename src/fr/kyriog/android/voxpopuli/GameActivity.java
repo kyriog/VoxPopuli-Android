@@ -1,6 +1,7 @@
 package fr.kyriog.android.voxpopuli;
 
 import fr.kyriog.android.voxpopuli.adapter.PlayerAdapter;
+import fr.kyriog.android.voxpopuli.adapter.ResultPlayerAdapter;
 import fr.kyriog.android.voxpopuli.adapter.VotedPlayerAdapter;
 import fr.kyriog.android.voxpopuli.entity.Player;
 import fr.kyriog.android.voxpopuli.entity.Question;
@@ -453,11 +454,15 @@ public class GameActivity extends Activity {
 			onUpdateTimer(timer, maxTimer);
 	}
 
-	public void onShowVotes(Question question, int[] majorities) {
+	public void onShowVotes(Question question, int[] majorities, List<Player> playersVotes) {
 		if(gameStatus == GAMESTATUS_VOTING)
 			onVote(-1);
 		gameStatus = GAMESTATUS_RESULTS;
 		this.majorities = majorities;
+		for(Player playerVote : playersVotes) {
+			Player player = Player.getPlayerById(players, playerVote.getId());
+			player.setVote(playerVote.getVote());
+		}
 		updateShowVotes();
 	}
 
@@ -494,6 +499,10 @@ public class GameActivity extends Activity {
 				break;
 			}
 		}
+
+		adapter = new ResultPlayerAdapter(this, players);
+		GridView playersView = (GridView) findViewById(R.id.game_voted_players);
+		playersView.setAdapter(adapter);
 
 		updateAlivePlayersCount();
 		updateVotingPlayersCount();

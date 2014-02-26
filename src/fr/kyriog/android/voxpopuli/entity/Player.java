@@ -11,6 +11,7 @@ public class Player implements Parcelable {
 	private String avatarUrl;
 	private Bitmap avatarBitmap;
 	private String username;
+	private int vote = -1;
 	private boolean hasVoted = false;
 
 	public Player(String id) {
@@ -49,6 +50,14 @@ public class Player implements Parcelable {
 		this.username = username;
 	}
 
+	public int getVote() {
+		return vote;
+	}
+
+	public void setVote(int vote) {
+		this.vote = vote;
+	}
+
 	public boolean hasVoted() {
 		return hasVoted;
 	}
@@ -60,6 +69,7 @@ public class Player implements Parcelable {
 	public static void resetVotes(List<Player> players) {
 		for(Player player : players) {
 			player.setVoted(false);
+			player.setVote(-1);
 		}
 	}
 
@@ -91,6 +101,7 @@ public class Player implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeParcelable(avatarBitmap, 0);
+		dest.writeInt(vote);
 		String[] data = new String[] {
 				id,
 				avatarUrl,
@@ -117,6 +128,7 @@ public class Player implements Parcelable {
 
 	public Player(Parcel in) {
 		avatarBitmap = in.readParcelable(Bitmap.class.getClassLoader());
+		vote = in.readInt();
 		String[] data = new String[3];
 		in.readStringArray(data);
 		id = data[0];
