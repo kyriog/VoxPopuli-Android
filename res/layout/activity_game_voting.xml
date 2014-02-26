@@ -79,33 +79,6 @@
         android:textColor="@android:color/primary_text_light" />
 
     <TextView
-        android:id="@+id/game_voting_vote_a"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
-        android:layout_toRightOf="@+id/game_voting_answer_a"
-        android:layout_alignBaseline="@+id/game_voting_answer_a"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-    
-    <TextView
-        android:id="@+id/game_voting_vote_b"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
-        android:layout_toRightOf="@+id/game_voting_answer_b"
-        android:layout_alignBaseline="@+id/game_voting_answer_b"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-    
-    <TextView
-        android:id="@+id/game_voting_vote_c"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
-        android:layout_toRightOf="@+id/game_voting_answer_c"
-        android:layout_alignBaseline="@+id/game_voting_answer_c"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
         android:id="@+id/game_voting_alive_players_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
