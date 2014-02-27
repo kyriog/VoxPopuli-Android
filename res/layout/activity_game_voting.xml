@@ -42,7 +42,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/game_time"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="19dp" />
+        android:layout_marginTop="19dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:gravity="center" />
 
     <Button
         android:id="@+id/game_voting_answer_a"

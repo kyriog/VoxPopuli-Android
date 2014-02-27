@@ -42,69 +42,42 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/game_voting_lifecount"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:gravity="center" />
     
     <TextView
         android:id="@+id/game_voting_middle"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_below="@+id/game_voting_question"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true" />
-    
-    <TextView
-        android:id="@+id/game_voting_vote_a"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/game_voting_middle"
-        android:layout_alignBaseline="@+id/game_voting_middle"
-		android:layout_marginRight="20dp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
     
     <Button
         android:id="@+id/game_voting_answer_a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/game_voting_vote_a"
-        android:layout_alignBaseline="@+id/game_voting_vote_a"
-        android:layout_marginRight="3dp"
-        android:background="@drawable/blue_btn" />
-    
-    <TextView
-        android:id="@+id/game_voting_vote_b"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/game_voting_middle"
+        android:layout_toLeftOf="@+id/game_voting_middle"
         android:layout_alignBaseline="@+id/game_voting_middle"
-		android:layout_marginLeft="20dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="right" />
+        android:layout_marginRight="15dp"
+        android:background="@drawable/blue_btn" />
     
     <Button
         android:id="@+id/game_voting_answer_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/game_voting_vote_b"
-        android:layout_alignBaseline="@+id/game_voting_vote_b"
-        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/game_voting_middle"
+        android:layout_alignBaseline="@+id/game_voting_middle"
+        android:layout_marginLeft="15dp"
         android:background="@drawable/red_btn" />
-    
-    <TextView
-        android:id="@+id/game_voting_vote_c"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_below="@+id/game_voting_middle"
-        android:layout_centerHorizontal="true"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="center" />
 
     <Button
         android:id="@+id/game_voting_answer_c"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/game_voting_vote_c"
-        android:layout_marginTop="3dp"
+        android:layout_below="@+id/game_voting_middle"
+        android:layout_marginTop="50dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/green_btn" />
     
