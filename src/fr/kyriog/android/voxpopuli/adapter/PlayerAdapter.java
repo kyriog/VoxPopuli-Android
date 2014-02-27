@@ -48,13 +48,13 @@ public class PlayerAdapter extends BaseAdapter {
 		TextView username = (TextView) convertView.findViewById(R.id.game_waiting_player_username);
 		username.setText(player.getUsername());
 
+		ImageView avatar = (ImageView) convertView.findViewById(R.id.game_waiting_player_image);
 		if(player.getAvatarBitmap() == null) {
+			avatar.setImageResource(R.drawable.default_avatar);
 			AvatarDownloader downloader = new AvatarDownloader(new AvatarHandler(this), player);
 			downloader.start();
-		} else {
-			ImageView avatar = (ImageView) convertView.findViewById(R.id.game_waiting_player_image);
+		} else
 			avatar.setImageBitmap(player.getAvatarBitmap());
-		}
 
 		return convertView;
 	}
