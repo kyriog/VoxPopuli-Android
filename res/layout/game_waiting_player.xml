@@ -5,11 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    <ImageView
+    <fr.kyriog.android.voxpopuli.widget.SquareImageView
         android:id="@+id/game_waiting_player_image"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/game_waiting_player_username"
