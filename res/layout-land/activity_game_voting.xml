@@ -12,16 +12,12 @@
         android:id="@+id/game_voting_lifecount"
         android:layout_width="30sp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:gravity="right"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:gravity="right" />
     
     <TextView
         android:id="@+id/game_voting_life"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignTop="@+id/game_voting_lifecount"
         android:layout_toRightOf="@+id/game_voting_lifecount" />
 	
     <ProgressBar
@@ -29,7 +25,6 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/game_voting_life"
         android:layout_toLeftOf="@+id/game_time"
         android:layout_toRightOf="@+id/game_voting_life"
         android:layout_marginLeft="2dp"
@@ -39,7 +34,6 @@
         android:id="@+id/game_time"
         android:layout_width="30sp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/game_voting_life"
         android:layout_alignParentRight="true" />
     
     <TextView
