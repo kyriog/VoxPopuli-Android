@@ -345,12 +345,17 @@ public class GameActivity extends Activity {
 	}
 
 	private void updateNewQuestion() {
+		updateTitle();
+
+		if(!canPlay) {
+			onVote(-1);
+			return;
+		}
+
 		if(gameStarted)
 			setContentView(R.layout.activity_game_voting);
 		else
 			gameStarted = true;
-
-		updateTitle();
 
 		TextView questionView = (TextView) findViewById(R.id.game_voting_question);
 		questionView.setText(question.getQuestion());
