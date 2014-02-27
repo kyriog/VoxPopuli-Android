@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class PlayerAdapter extends BaseAdapter {
-	private final Activity activity;
+	protected final Activity activity;
 	private final List<Player> players;
 
 	public PlayerAdapter(Activity activity, List<Player> players) {
