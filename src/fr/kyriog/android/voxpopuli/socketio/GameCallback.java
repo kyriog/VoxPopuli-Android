@@ -107,8 +107,15 @@ public class GameCallback extends BaseCallback {
 					msg.obj = question;
 					handler.sendMessage(msg);
 					resetTimer();
+				} else if("hasVoted".equals(action)) {
+					msg.arg1 = GameHandler.ACTION_HASVOTED;
+					String voter = rootData.getString("player");
+					msg.obj = voter;
+					handler.sendMessage(msg);
 				} else if("showVotes".equals(action)) {
 					msg.arg1 = GameHandler.ACTION_SHOWVOTES;
+					Bundle data = new Bundle();
+
 					JSONArray votes = rootData.getJSONArray("votes");
 					for(int i = 0; i < 3; i++) {
 						int vote = votes.getInt(i);
@@ -124,7 +131,35 @@ public class GameCallback extends BaseCallback {
 							break;
 						}
 					}
-					msg.obj = question;
+					data.putParcelable(GameHandler.BUNDLE_QUESTION, question);
+
+					ArrayList<Player> playersVotes = new ArrayList<Player>();
+					JSONObject jsonPlayersVotes = rootData.getJSONObject("votesNamed");
+					JSONArray playersIds = jsonPlayersVotes.names();
+					if(playersIds != null) {
+						for(int i = 0; i < playersIds.length(); i++) {
+							Player player = new Player(playersIds.getString(i));
+							player.setVote(jsonPlayersVotes.getInt(playersIds.getString(i)));
+							playersVotes.add(player);
+						}
+					}
+					data.putParcelableArrayList(GameHandler.BUNDLE_PLAYERS, playersVotes);
+
+					JSONArray jsonDeadPlayers = rootData.getJSONArray("deadPlayers");
+					String[] deadPlayers = new String[jsonDeadPlayers.length()];
+					for(int i = 0; i < jsonDeadPlayers.length(); i++) {
+						deadPlayers[i] = jsonDeadPlayers.getString(i);
+					}
+					data.putStringArray(GameHandler.BUNDLE_DEADPLAYERS, deadPlayers);
+
+					JSONArray jsonMajorities = rootData.getJSONArray("majs");
+					int[] majorities = new int[jsonMajorities.length()];
+					for(int i = 0; i < jsonMajorities.length(); i++) {
+						majorities[i] = jsonMajorities.getInt(i);
+					}
+					data.putIntArray(GameHandler.BUNDLE_MAJORITIES, majorities);
+
+					msg.obj = data;
 					handler.sendMessage(msg);
 					resetTimer();
 				} else if("looseLife".equals(action)) {

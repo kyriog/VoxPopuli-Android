@@ -20,6 +20,7 @@ public class GameHandler extends Handler {
 	public final static int ACTION_SHOWVOTES = 1006;
 	public final static int ACTION_LOOSELIFE = 1007;
 	public final static int ACTION_ENDGAME = 1008;
+	public final static int ACTION_HASVOTED = 1009;
 
 	public final static int STATUS_WAITING = 2000;
 
@@ -28,10 +29,8 @@ public class GameHandler extends Handler {
 	public final static String BUNDLE_START_PLAYER_COUNT = "startPlayerCount";
 	public final static String BUNDLE_MAX_PLAYER_COUNT = "maxPlayerCount";
 	public final static String BUNDLE_QUESTION = "question";
-	public final static String BUNDLE_ANSWER_A = "answerA";
-	public final static String BUNDLE_ANSWER_B = "answerB";
-	public final static String BUNDLE_ANSWER_C = "answerC";
-	public final static String BUNDLE_GAME = "game";
+	public final static String BUNDLE_DEADPLAYERS = "deadPlayers";
+	public final static String BUNDLE_MAJORITIES = "majorities";
 
 	private final GameActivity activity;
 
@@ -71,8 +70,17 @@ public class GameHandler extends Handler {
 		case ACTION_NEWQUESTION:
 			activity.onNewQuestion((Question) msg.obj);
 			break;
+		case ACTION_HASVOTED:
+			activity.increaseVotingPlayers((String) msg.obj);
+			break;
 		case ACTION_SHOWVOTES:
-			activity.onShowVotes((Question) msg.obj);
+			Bundle data = (Bundle) msg.obj;
+			Question question = data.getParcelable(BUNDLE_QUESTION);
+			List<Player> playersVotes = data.getParcelableArrayList(BUNDLE_PLAYERS);
+			String[] deadPlayers = data.getStringArray(BUNDLE_DEADPLAYERS);
+			int[] majorities = data.getIntArray(BUNDLE_MAJORITIES);
+			activity.onShowVotes(question, majorities, playersVotes);
+			activity.decreaseAlivePlayers(deadPlayers);
 			break;
 		case ACTION_LOOSELIFE:
 			activity.onLooseLife(msg.arg2);
