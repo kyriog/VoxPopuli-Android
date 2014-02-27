@@ -136,10 +136,12 @@ public class GameCallback extends BaseCallback {
 					ArrayList<Player> playersVotes = new ArrayList<Player>();
 					JSONObject jsonPlayersVotes = rootData.getJSONObject("votesNamed");
 					JSONArray playersIds = jsonPlayersVotes.names();
-					for(int i = 0; i < playersIds.length(); i++) {
-						Player player = new Player(playersIds.getString(i));
-						player.setVote(jsonPlayersVotes.getInt(playersIds.getString(i)));
-						playersVotes.add(player);
+					if(playersIds != null) {
+						for(int i = 0; i < playersIds.length(); i++) {
+							Player player = new Player(playersIds.getString(i));
+							player.setVote(jsonPlayersVotes.getInt(playersIds.getString(i)));
+							playersVotes.add(player);
+						}
 					}
 					data.putParcelableArrayList(GameHandler.BUNDLE_PLAYERS, playersVotes);
 
