@@ -21,6 +21,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -63,6 +65,7 @@ public class GameActivity extends Activity {
 	private static BaseCallback callback;
 
 	private BaseAdapter adapter;
+	private WakeLock dimWakelock;
 	private int gameStatus = 0;
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private int nbPlayers;
@@ -82,11 +85,15 @@ public class GameActivity extends Activity {
 	private final String[] winners = new String[2];
 	private boolean canPlay = true;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		Bundle extras = getIntent().getExtras();
+
+		PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+		dimWakelock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "voxpopuli");
 
 		if(socket == null || !socket.isConnected()) {
 			try {
@@ -179,6 +186,14 @@ public class GameActivity extends Activity {
 	}
 
 	@Override
+	protected void onResume() {
+		if(gameStatus == GAMESTATUS_WAITING)
+			dimWakelock.acquire();
+
+		super.onResume();
+	}
+
+	@Override
 	public void onBackPressed() {
 		doBack();
 	}
@@ -246,6 +261,14 @@ public class GameActivity extends Activity {
 	}
 
 	@Override
+	protected void onPause() {
+		if(dimWakelock.isHeld())
+			dimWakelock.release();
+
+		super.onPause();
+	}
+
+	@Override
 	protected void onStop() {
 		if(isFinishing()) {
 			socket.disconnect();
@@ -267,6 +290,8 @@ public class GameActivity extends Activity {
 
 	public void onWaiting(List<Player> players, int nbPlayers, int nbMinPlayers, int nbMaxPlayers) {
 		gameStatus = GAMESTATUS_WAITING;
+
+		dimWakelock.acquire();
 
 		setContentView(R.layout.activity_game_waiting);
 
@@ -338,6 +363,10 @@ public class GameActivity extends Activity {
 
 	public void onNewQuestion(Question question) {
 		gameStatus = GAMESTATUS_VOTING;
+
+		if(dimWakelock.isHeld())
+			dimWakelock.release();
+
 		this.question = question;
 		Player.resetVotes(players);
 		nbVotingPlayers = 0;
