@@ -9,6 +9,7 @@ import io.socket.SocketIO;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -118,7 +119,7 @@ public class HomeActivity extends Activity {
 			header.append("&user_session=" + prefs.getString(HomeActivity.VP_DATA_USER_SESSION, ""));
 			header.append("&page=index");
 			try {
-				socket = new SocketIO("http://ks.richie.fr:443/lldpgn", header.toString());
+				socket = new SocketIO("http://vox-populi.richie.fr/lldpgn", header.toString());
 				socket.connect(callback);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
