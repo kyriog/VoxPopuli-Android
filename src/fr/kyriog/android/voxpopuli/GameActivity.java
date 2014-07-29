@@ -95,7 +95,7 @@ public class GameActivity extends Activity {
 				header.append("&user_session=" + extras.getString(HomeActivity.VP_DATA_USER_SESSION));
 				header.append("&page=game");
 				header.append("&room=" + extras.getString(HomeActivity.VP_DATA_GAME));
-				socket = new SocketIO("http://ks.richie.fr:443/lldpgn", header.toString());
+				socket = new SocketIO("http://vox-populi.richie.fr/lldpgn", header.toString());
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
