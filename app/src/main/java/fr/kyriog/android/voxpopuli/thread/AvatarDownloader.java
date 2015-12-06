@@ -1,15 +1,10 @@
 package fr.kyriog.android.voxpopuli.thread;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,23 +24,15 @@ public class AvatarDownloader extends Thread {
 	@Override
 	public void run() {
 		if(player.getAvatarBitmap() == null) {
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet();
 			try {
-				URI uri = new URI(player.getAvatarUrl());
-				httpGet.setURI(uri);
-				httpGet.addHeader("Accept-Encoding", "gzip");
-				HttpResponse response = httpClient.execute(httpGet);
-				InputStream is = response.getEntity().getContent();
+				URL url = new URL(player.getAvatarUrl());
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				InputStream is = new BufferedInputStream(connection.getInputStream());
 				Bitmap bitmap = BitmapFactory.decodeStream(is);
 				if(bitmap != null) {
 					player.setAvatarBitmap(bitmap);
 					handler.sendEmptyMessage(0);
 				}
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
