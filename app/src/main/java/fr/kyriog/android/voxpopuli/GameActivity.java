@@ -8,8 +8,10 @@ import fr.kyriog.android.voxpopuli.entity.Question;
 import fr.kyriog.android.voxpopuli.handler.GameHandler;
 import fr.kyriog.android.voxpopuli.socketio.BaseCallback;
 import fr.kyriog.android.voxpopuli.socketio.GameCallback;
-import io.socket.SocketIO;
-import java.net.MalformedURLException;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +63,7 @@ public class GameActivity extends Activity {
 	private final static String GAMESTATUS_RESULTS_MAJORITIES = "resultsMajorities";
 	private final static String GAMESTATUS_ENDED_WINNERS = "endedWinners";
 
-	private static SocketIO socket;
+	private static Socket socket;
 	private static BaseCallback callback;
 
 	private BaseAdapter adapter;
@@ -95,22 +97,27 @@ public class GameActivity extends Activity {
 		PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
 		dimWakelock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "voxpopuli");
 
-		if(socket == null || !socket.isConnected()) {
+		if(socket == null || !socket.connected()) {
 			try {
 				StringBuilder header = new StringBuilder();
 				header.append("user_id=" + extras.getString(HomeActivity.VP_DATA_USER_ID));
 				header.append("&user_session=" + extras.getString(HomeActivity.VP_DATA_USER_SESSION));
 				header.append("&page=game");
 				header.append("&room=" + extras.getString(HomeActivity.VP_DATA_GAME));
-				socket = new SocketIO("http://vox-populi.richie.fr/lldpgn", header.toString());
-			} catch (MalformedURLException e) {
+
+				IO.Options opts = new IO.Options();
+				opts.query = header.toString();
+				opts.forceNew = true;
+				socket = IO.socket("http://vox-populi.richie.fr/lldpgn", opts);
+			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
 		}
 		GameHandler handler = new GameHandler(this);
-		if(!socket.isConnected()) {
+		if(!socket.connected()) {
 			callback = new GameCallback(handler);
-			socket.connect(callback);
+			socket.on("gameEvent", callback);
+			socket.connect();
 		} else
 			callback.setHandler(handler);
 

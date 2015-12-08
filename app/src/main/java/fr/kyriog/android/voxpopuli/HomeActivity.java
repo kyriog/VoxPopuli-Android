@@ -5,9 +5,10 @@ import fr.kyriog.android.voxpopuli.entity.Game;
 import fr.kyriog.android.voxpopuli.handler.HomeHandler;
 import fr.kyriog.android.voxpopuli.socketio.BaseCallback;
 import fr.kyriog.android.voxpopuli.socketio.HomeCallback;
-import io.socket.SocketIO;
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -28,7 +29,7 @@ public class HomeActivity extends Activity {
 	private final static int LOGIN_REQUEST_CODE = 1;
 	private final static String SIS_GAMES = "games";
 
-	private static SocketIO socket;
+	private static Socket socket;
 	private static BaseCallback callback;
 	private BaseAdapter adapter;
 
@@ -111,17 +112,23 @@ public class HomeActivity extends Activity {
 	}
 
 	private void loadGames() {
-		if(callback == null)
-			callback = new HomeCallback(new HomeHandler(games, adapter));
-		if(socket == null || !socket.isConnected()) {
+		if(callback == null) {
+			HomeHandler handler = new HomeHandler(games, adapter);
+			callback = new HomeCallback(handler);
+		}
+		if(socket == null || !socket.connected()) {
 			StringBuilder header = new StringBuilder();
 			header.append("user_id=" + prefs.getString(HomeActivity.VP_DATA_USER_ID, ""));
 			header.append("&user_session=" + prefs.getString(HomeActivity.VP_DATA_USER_SESSION, ""));
 			header.append("&page=index");
 			try {
-				socket = new SocketIO("http://vox-populi.richie.fr/lldpgn", header.toString());
-				socket.connect(callback);
-			} catch (MalformedURLException e) {
+				IO.Options opts = new IO.Options();
+				opts.query = header.toString();
+				opts.forceNew = true;
+				socket = IO.socket("http://vox-populi.richie.fr/lldpgn", opts);
+				socket.on("tickList", callback);
+				socket.connect();
+			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
 		}
