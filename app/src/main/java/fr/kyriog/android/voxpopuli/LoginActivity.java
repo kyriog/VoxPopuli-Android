@@ -27,21 +27,21 @@ public class LoginActivity extends Activity {
 		settings.setJavaScriptEnabled(true);
 		web.addJavascriptInterface(new JS(), "androidjs");
 		web.setWebViewClient(new Client());
-		web.loadUrl("http://vox-populi.richie.fr/login");
+		web.loadUrl("https://vox-populi.richie.fr/login");
 	}
 
 	private class Client extends WebViewClient {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
-			if("http://vox-populi.richie.fr/".equals(url))
+			if("https://vox-populi.richie.fr/".equals(url))
 				setContentView(R.layout.loading);
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
-			if("http://vox-populi.richie.fr/".equals(url))
-				view.loadUrl("http://vox-populi.richie.fr/getuserjson");
-			else if("http://vox-populi.richie.fr/getuserjson".equals(url)) {
+			if("https://vox-populi.richie.fr/".equals(url))
+				view.loadUrl("https://vox-populi.richie.fr/getuserjson");
+			else if("https://vox-populi.richie.fr/getuserjson".equals(url)) {
 				view.loadUrl("javascript:window.androidjs.getHtml(document.getElementsByTagName('body')[0].innerHTML);");
 			}
 		}

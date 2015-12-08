@@ -125,7 +125,7 @@ public class HomeActivity extends Activity {
 				IO.Options opts = new IO.Options();
 				opts.query = header.toString();
 				opts.forceNew = true;
-				socket = IO.socket("http://vox-populi.richie.fr/lldpgn", opts);
+				socket = IO.socket("https://vox-populi.richie.fr/lldpgn", opts);
 				socket.on("tickList", callback);
 				socket.connect();
 			} catch (URISyntaxException e) {
